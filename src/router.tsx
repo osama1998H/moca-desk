@@ -1,8 +1,21 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router";
 import { RequireAuth } from "@/components/RequireAuth";
 import { DeskLayout } from "@/layouts/DeskLayout";
 import { Login } from "@/pages/Login";
 import { DeskHome } from "@/pages/DeskHome";
+
+const ListView = lazy(() => import("@/pages/ListView"));
+const FormView = lazy(() => import("@/pages/FormView"));
+
+function PageSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="h-8 w-48 animate-pulse rounded-lg bg-gray-200" />
+      <div className="h-64 w-full animate-pulse rounded-lg bg-gray-100" />
+    </div>
+  );
+}
 
 export const router = createBrowserRouter([
   {
@@ -21,10 +34,30 @@ export const router = createBrowserRouter([
         ),
         children: [
           { index: true, element: <DeskHome /> },
-          // Future routes (MS-17-T4):
-          // { path: ":doctype", element: <ListView /> },
-          // { path: ":doctype/new", element: <FormView /> },
-          // { path: ":doctype/:name", element: <FormView /> },
+          {
+            path: ":doctype",
+            element: (
+              <Suspense fallback={<PageSkeleton />}>
+                <ListView />
+              </Suspense>
+            ),
+          },
+          {
+            path: ":doctype/new",
+            element: (
+              <Suspense fallback={<PageSkeleton />}>
+                <FormView />
+              </Suspense>
+            ),
+          },
+          {
+            path: ":doctype/:name",
+            element: (
+              <Suspense fallback={<PageSkeleton />}>
+                <FormView />
+              </Suspense>
+            ),
+          },
         ],
       },
       {
