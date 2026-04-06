@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { I18nProvider } from "@/providers/I18nProvider";
 import { WebSocketProvider } from "@/providers/WebSocketProvider";
 import { App } from "@/App";
 import { Toaster } from "sonner";
@@ -27,10 +28,12 @@ createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <I18nProvider>
         <WebSocketProvider>
           <App />
           <Toaster position="bottom-right" richColors />
         </WebSocketProvider>
+        </I18nProvider>
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,
