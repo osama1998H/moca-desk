@@ -34,9 +34,8 @@ export const LAYOUT_TYPES = new Set<FieldType>([
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyFieldComponent = React.ComponentType<any>;
 
-export const FIELD_TYPE_MAP: Record<
-  FieldType,
-  React.LazyExoticComponent<AnyFieldComponent>
+export const FIELD_TYPE_MAP: Partial<
+  Record<FieldType, React.LazyExoticComponent<AnyFieldComponent>>
 > = {
   // Tier 1 — Storage
   Data: lazy(() => import("./DataField")),

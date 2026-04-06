@@ -38,7 +38,10 @@ export type FieldType =
   | "TabBreak"
   | "HTML"
   | "Button"
-  | "Heading";
+  | "Heading"
+  // Custom field types: accepts any string while preserving autocomplete for built-ins.
+  // The (string & {}) idiom prevents TypeScript from collapsing the union to plain string.
+  | (string & {});
 
 // ── Naming ──────────────────────────────────────────────────────────────────
 // Mirrors pkg/meta/metatype.go NamingStrategy.

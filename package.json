@@ -1,9 +1,13 @@
 {
-  "name": "moca-desk",
+  "name": "@moca/desk",
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
+    "predev": "test -f .moca-extensions.ts || echo '// No extensions' > .moca-extensions.ts",
     "dev": "vite --port 3000",
     "build": "tsc -b && vite build",
     "preview": "vite preview",

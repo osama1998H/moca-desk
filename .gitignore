@@ -3,3 +3,4 @@ dist/
 .vite/
 *.tsbuildinfo
 package-lock.json
+.moca-extensions.ts
