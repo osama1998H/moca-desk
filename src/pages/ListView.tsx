@@ -1,8 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMetaType } from "@/providers/MetaProvider";
 import { useDocList } from "@/providers/DocProvider";
 import { usePermissions } from "@/providers/PermissionProvider";
+import { useWebSocket } from "@/providers/WebSocketProvider";
 import { LAYOUT_TYPES } from "@/components/fields/types";
 import type { FieldDef, FilterTuple } from "@/api/types";
 import { cn } from "@/lib/utils";
@@ -125,6 +127,16 @@ export function ListView() {
 
   const { data: meta, isLoading: metaLoading, error: metaError } = useMetaType(doctype);
   const { canCreate } = usePermissions(doctype);
+  const { subscribe } = useWebSocket();
+  const queryClient = useQueryClient();
+
+  // Real-time: silently refresh list when documents change.
+  useEffect(() => {
+    if (!doctype) return;
+    return subscribe(doctype, () => {
+      void queryClient.invalidateQueries({ queryKey: ["docList", doctype] });
+    });
+  }, [doctype, subscribe, queryClient]);
 
   const [filters, setFilters] = useState<FilterTuple[]>([]);
   const [page, setPage] = useState(0);

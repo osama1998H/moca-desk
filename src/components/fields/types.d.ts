@@ -15,5 +15,5 @@ export interface LayoutFieldProps {
 }
 export declare const LAYOUT_TYPES: Set<FieldType>;
 type AnyFieldComponent = React.ComponentType<any>;
-export declare const FIELD_TYPE_MAP: Record<FieldType, React.LazyExoticComponent<AnyFieldComponent>>;
+export declare const FIELD_TYPE_MAP: Partial<Record<FieldType, React.LazyExoticComponent<AnyFieldComponent>>>;
 export {};

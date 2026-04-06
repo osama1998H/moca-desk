@@ -1,4 +1,4 @@
-export type FieldType = "Data" | "Text" | "LongText" | "Markdown" | "Code" | "Int" | "Float" | "Currency" | "Percent" | "Date" | "Datetime" | "Time" | "Duration" | "Select" | "Link" | "DynamicLink" | "Table" | "TableMultiSelect" | "Attach" | "AttachImage" | "Check" | "Color" | "Geolocation" | "JSON" | "Password" | "Rating" | "Signature" | "Barcode" | "HTMLEditor" | "SectionBreak" | "ColumnBreak" | "TabBreak" | "HTML" | "Button" | "Heading";
+export type FieldType = "Data" | "Text" | "LongText" | "Markdown" | "Code" | "Int" | "Float" | "Currency" | "Percent" | "Date" | "Datetime" | "Time" | "Duration" | "Select" | "Link" | "DynamicLink" | "Table" | "TableMultiSelect" | "Attach" | "AttachImage" | "Check" | "Color" | "Geolocation" | "JSON" | "Password" | "Rating" | "Signature" | "Barcode" | "HTMLEditor" | "SectionBreak" | "ColumnBreak" | "TabBreak" | "HTML" | "Button" | "Heading" | (string & {});
 export interface NamingStrategy {
     rule: string;
     pattern?: string;

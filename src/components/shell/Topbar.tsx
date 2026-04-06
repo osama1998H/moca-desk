@@ -1,11 +1,14 @@
 import { Link, useParams } from "react-router";
 import { useAuth } from "@/providers/AuthProvider";
+import { useWebSocket } from "@/providers/WebSocketProvider";
 import { useMetaType } from "@/providers/MetaProvider";
+import { cn } from "@/lib/utils";
 import { ChevronRightIcon, LogOutIcon } from "lucide-react";
 
 export function Topbar() {
   const { doctype, name } = useParams<{ doctype: string; name: string }>();
   const { user, logout } = useAuth();
+  const { connectionState } = useWebSocket();
 
   // Only fetch meta when a doctype is present
   const { data: meta } = useMetaType(doctype ?? "");
@@ -53,6 +56,17 @@ export function Topbar() {
 
       {/* User menu */}
       <div className="flex items-center gap-3">
+        <span
+          title={connectionState}
+          className={cn(
+            "inline-block size-1.5 rounded-full",
+            connectionState === "connected" && "bg-green-500",
+            (connectionState === "connecting" ||
+              connectionState === "reconnecting") &&
+              "animate-pulse bg-amber-500",
+            connectionState === "disconnected" && "bg-gray-400",
+          )}
+        />
         <span className="text-sm text-gray-600">
           {user?.full_name ?? user?.email}
         </span>

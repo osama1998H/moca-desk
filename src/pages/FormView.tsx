@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useMetaType } from "@/providers/MetaProvider";
 import {
   useDocument,
@@ -8,6 +10,7 @@ import {
 } from "@/providers/DocProvider";
 import { usePermissions } from "@/providers/PermissionProvider";
 import { useDirtyTracking } from "@/hooks/useDirtyTracking";
+import { useRealtimeDoc } from "@/hooks/useRealtimeDoc";
 import { parseLayout, type ParsedSection } from "@/utils/layoutParser";
 import {
   evaluateDependsOn,
@@ -15,11 +18,13 @@ import {
 } from "@/utils/expressionEval";
 import { FieldRenderer } from "@/components/fields/FieldRenderer";
 import { SectionBreak } from "@/components/layout/SectionBreak";
+import { StaleDocBanner } from "@/components/realtime/StaleDocBanner";
+import { VersionHistory } from "@/components/version/VersionHistory";
 import { LAYOUT_TYPES } from "@/components/fields/types";
 import { MocaApiError } from "@/api/client";
 import type { DocRecord, FieldDef } from "@/api/types";
 import { cn } from "@/lib/utils";
-import { SaveIcon, XIcon, Loader2Icon } from "lucide-react";
+import { SaveIcon, XIcon, Loader2Icon, HistoryIcon } from "lucide-react";
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -68,10 +73,13 @@ export function FormView() {
   const updateMutation = useDocUpdate(doctype, isNew ? "" : (name ?? ""));
   const { canWrite, canCreate } = usePermissions(doctype);
 
+  const queryClient = useQueryClient();
+
   const [formValues, setFormValues] = useState<DocRecord>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState(0);
   const [initialized, setInitialized] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   // Initialize form values from server doc or defaults
   const initialSnapshot = useMemo<DocRecord | undefined>(() => {
@@ -95,6 +103,20 @@ export function FormView() {
   }, [doctype, name]);
 
   const { isDirty } = useDirtyTracking(formValues, initialSnapshot);
+
+  // Real-time updates from other users
+  const { lastEvent, isStale } = useRealtimeDoc(
+    doctype,
+    isNew ? "" : (name ?? ""),
+  );
+
+  // Auto-refresh when form is clean and a remote change arrives.
+  useEffect(() => {
+    if (!lastEvent || isDirty) return;
+    void queryClient.invalidateQueries({ queryKey: ["doc", doctype, name] });
+    setInitialized(false);
+    toast(`Updated by ${lastEvent.user}`, { duration: 3000 });
+  }, [lastEvent, isDirty, queryClient, doctype, name]);
 
   // Parse layout
   const layout = useMemo(
@@ -196,33 +218,58 @@ export function FormView() {
             <span className="text-xs text-amber-600">Unsaved changes</span>
           )}
         </div>
-        {!readOnly && (
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          {!isNew && meta.track_changes && (
             <button
               type="button"
-              onClick={handleCancel}
-              disabled={isSaving}
-              className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              onClick={() => setHistoryOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
             >
-              <XIcon className="size-3.5" />
-              Cancel
+              <HistoryIcon className="size-3.5" />
+              History
             </button>
-            <button
-              type="button"
-              onClick={() => void handleSave()}
-              disabled={isSaving || (!isNew && !isDirty)}
-              className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
-            >
-              {isSaving ? (
-                <Loader2Icon className="size-3.5 animate-spin" />
-              ) : (
-                <SaveIcon className="size-3.5" />
-              )}
-              Save
-            </button>
-          </div>
-        )}
+          )}
+          {!readOnly && (
+            <>
+              <button
+                type="button"
+                onClick={handleCancel}
+                disabled={isSaving}
+                className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+              >
+                <XIcon className="size-3.5" />
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleSave()}
+                disabled={isSaving || (!isNew && !isDirty)}
+                className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
+              >
+                {isSaving ? (
+                  <Loader2Icon className="size-3.5 animate-spin" />
+                ) : (
+                  <SaveIcon className="size-3.5" />
+                )}
+                Save
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* Stale document banner (dirty form + remote change) */}
+      {isDirty && isStale && lastEvent && (
+        <StaleDocBanner
+          user={lastEvent.user}
+          onReload={() => {
+            void queryClient.invalidateQueries({
+              queryKey: ["doc", doctype, name],
+            });
+            setInitialized(false);
+          }}
+        />
+      )}
 
       {/* Tab bar */}
       {layout.tabs.length > 1 && (
@@ -295,6 +342,16 @@ export function FormView() {
           </div>
         </SectionBreak>
       ))}
+      {/* Version history sidebar */}
+      {!isNew && meta.track_changes && (
+        <VersionHistory
+          doctype={doctype}
+          name={name!}
+          fields={meta.fields}
+          open={historyOpen}
+          onClose={() => setHistoryOpen(false)}
+        />
+      )}
     </div>
   );
 }

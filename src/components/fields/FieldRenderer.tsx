@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { FIELD_TYPE_MAP, LAYOUT_TYPES } from "./types";
-import type { FieldProps } from "./types";
+import type { FieldProps, LayoutFieldProps } from "./types";
 import { getCustomFieldType } from "@/lib/fieldTypeRegistry";
 import StubField from "./StubField";
 
@@ -42,21 +42,26 @@ export function FieldRenderer({
 
   const isLayout = LAYOUT_TYPES.has(fieldDef.field_type);
 
+  if (isLayout) {
+    const LayoutComp = Component as React.ComponentType<LayoutFieldProps>;
+    return (
+      <Suspense fallback={<FieldSkeleton />}>
+        <LayoutComp fieldDef={fieldDef} className={className} />
+      </Suspense>
+    );
+  }
+
   return (
     <Suspense fallback={<FieldSkeleton />}>
-      {isLayout ? (
-        <Component fieldDef={fieldDef} className={className} />
-      ) : (
-        <Component
-          fieldDef={fieldDef}
-          value={value}
-          onChange={onChange}
-          readOnly={readOnly ?? fieldDef.read_only}
-          error={error}
-          doc={doc}
-          className={className}
-        />
-      )}
+      <Component
+        fieldDef={fieldDef}
+        value={value}
+        onChange={onChange}
+        readOnly={readOnly ?? fieldDef.read_only}
+        error={error}
+        doc={doc}
+        className={className}
+      />
     </Suspense>
   );
 }
