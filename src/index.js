@@ -8,5 +8,8 @@ export { registerFieldType } from "./lib/fieldTypeRegistry";
 export { FieldRenderer } from "./components/fields/FieldRenderer";
 // Hooks
 export { useAuth } from "./providers/AuthProvider";
+export { useWebSocket } from "./providers/WebSocketProvider";
 export { useMetaType } from "./providers/MetaProvider";
 export { useDocument, useDocList } from "./providers/DocProvider";
+export { useRealtimeDoc } from "./hooks/useRealtimeDoc";
+export { useDocVersions } from "./hooks/useDocVersions";

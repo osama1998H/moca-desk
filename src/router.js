@@ -7,6 +7,8 @@ import { Login } from "@/pages/Login";
 import { DeskHome } from "@/pages/DeskHome";
 const ListView = lazy(() => import("@/pages/ListView"));
 const FormView = lazy(() => import("@/pages/FormView"));
+const ReportView = lazy(() => import("@/pages/ReportView"));
+const DashboardView = lazy(() => import("@/pages/DashboardView"));
 function PageSkeleton() {
     return (_jsxs("div", { className: "space-y-4", children: [_jsx("div", { className: "h-8 w-48 animate-pulse rounded-lg bg-gray-200" }), _jsx("div", { className: "h-64 w-full animate-pulse rounded-lg bg-gray-100" })] }));
 }
@@ -23,6 +25,14 @@ export const router = createBrowserRouter([
                 element: (_jsx(RequireAuth, { children: _jsx(DeskLayout, {}) })),
                 children: [
                     { index: true, element: _jsx(DeskHome, {}) },
+                    {
+                        path: "report/:name",
+                        element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(ReportView, {}) })),
+                    },
+                    {
+                        path: "dashboard/:name",
+                        element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(DashboardView, {}) })),
+                    },
                     {
                         path: ":doctype",
                         element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(ListView, {}) })),

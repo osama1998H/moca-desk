@@ -225,3 +225,54 @@ export interface Permissions {
   canSubmit: boolean;
   canCancel: boolean;
 }
+
+// ── Report Types ──────────────────────────────────────────────────────────
+
+export interface ReportColumn {
+  field_name: string;
+  label: string;
+  field_type: FieldType;
+  width?: number;
+}
+
+export interface ReportFilter {
+  field_name: string;
+  label: string;
+  field_type: FieldType;
+  required: boolean;
+  default?: unknown;
+}
+
+export interface ChartConfig {
+  type: string;
+}
+
+export interface ReportMeta {
+  name: string;
+  doc_type: string;
+  type: string;
+  columns: ReportColumn[];
+  filters: ReportFilter[];
+  chart_config?: ChartConfig;
+}
+
+export interface ReportExecuteRequest {
+  filters: Record<string, unknown>;
+  limit?: number;
+  offset?: number;
+}
+
+// ── Dashboard Types ───────────────────────────────────────────────────────
+
+export type DashWidgetType = "number_card" | "chart" | "list" | "shortcut";
+
+export interface DashWidget {
+  type: DashWidgetType;
+  config: Record<string, unknown>;
+}
+
+export interface DashDef {
+  name: string;
+  label: string;
+  widgets: DashWidget[];
+}

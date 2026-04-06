@@ -7,6 +7,8 @@ import { DeskHome } from "@/pages/DeskHome";
 
 const ListView = lazy(() => import("@/pages/ListView"));
 const FormView = lazy(() => import("@/pages/FormView"));
+const ReportView = lazy(() => import("@/pages/ReportView"));
+const DashboardView = lazy(() => import("@/pages/DashboardView"));
 
 function PageSkeleton() {
   return (
@@ -34,6 +36,22 @@ export const router = createBrowserRouter([
         ),
         children: [
           { index: true, element: <DeskHome /> },
+          {
+            path: "report/:name",
+            element: (
+              <Suspense fallback={<PageSkeleton />}>
+                <ReportView />
+              </Suspense>
+            ),
+          },
+          {
+            path: "dashboard/:name",
+            element: (
+              <Suspense fallback={<PageSkeleton />}>
+                <DashboardView />
+              </Suspense>
+            ),
+          },
           {
             path: ":doctype",
             element: (
