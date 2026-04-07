@@ -9,7 +9,7 @@ import { createRouter } from "@/router";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { DeskConfigContext, defaultConfig, type DeskConfig } from "@/config";
-import "@/index.css";
+import "./index.css";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
