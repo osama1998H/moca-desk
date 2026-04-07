@@ -33,7 +33,7 @@
     "prebuild": "test -f .moca-extensions.ts || echo '// No extensions' > .moca-extensions.ts",
     "dev": "vite --port 3000",
     "build": "tsc -b && vite build",
-    "build:lib": "tsc -p tsconfig.lib.json",
+    "build:lib": "tsc -p tsconfig.lib.json && tsc-alias -p tsconfig.lib.json",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
@@ -66,14 +66,15 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^25.5.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.2",
+    "tsc-alias": "^1.8.16",
     "typescript": "~6.0.2",
     "vite": "^8.0.3"
   }
