@@ -4,6 +4,7 @@ import { RequireAuth } from "@/components/RequireAuth";
 import { DeskLayout } from "@/layouts/DeskLayout";
 import { Login } from "@/pages/Login";
 import { DeskHome } from "@/pages/DeskHome";
+import { getCustomPages } from "@/lib/pageRegistry";
 
 const ListView = lazy(() => import("@/pages/ListView"));
 const FormView = lazy(() => import("@/pages/FormView"));
@@ -19,69 +20,81 @@ function PageSkeleton() {
   );
 }
 
-export const router = createBrowserRouter([
-  {
-    path: "/desk",
-    children: [
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "app",
-        element: (
-          <RequireAuth>
-            <DeskLayout />
-          </RequireAuth>
-        ),
-        children: [
-          { index: true, element: <DeskHome /> },
-          {
-            path: "report/:name",
-            element: (
-              <Suspense fallback={<PageSkeleton />}>
-                <ReportView />
-              </Suspense>
-            ),
-          },
-          {
-            path: "dashboard/:name",
-            element: (
-              <Suspense fallback={<PageSkeleton />}>
-                <DashboardView />
-              </Suspense>
-            ),
-          },
-          {
-            path: ":doctype",
-            element: (
-              <Suspense fallback={<PageSkeleton />}>
-                <ListView />
-              </Suspense>
-            ),
-          },
-          {
-            path: ":doctype/new",
-            element: (
-              <Suspense fallback={<PageSkeleton />}>
-                <FormView />
-              </Suspense>
-            ),
-          },
-          {
-            path: ":doctype/:name",
-            element: (
-              <Suspense fallback={<PageSkeleton />}>
-                <FormView />
-              </Suspense>
-            ),
-          },
-        ],
-      },
-      {
-        index: true,
-        element: <Navigate to="/desk/app" replace />,
-      },
-    ],
-  },
-]);
+export function createRouter() {
+  const customRoutes = getCustomPages().map((page) => ({
+    path: page.path.replace(/^\/desk\/app\//, ""),
+    element: (
+      <Suspense fallback={<PageSkeleton />}>
+        <page.component />
+      </Suspense>
+    ),
+  }));
+
+  return createBrowserRouter([
+    {
+      path: "/desk",
+      children: [
+        {
+          path: "login",
+          element: <Login />,
+        },
+        {
+          path: "app",
+          element: (
+            <RequireAuth>
+              <DeskLayout />
+            </RequireAuth>
+          ),
+          children: [
+            { index: true, element: <DeskHome /> },
+            {
+              path: "report/:name",
+              element: (
+                <Suspense fallback={<PageSkeleton />}>
+                  <ReportView />
+                </Suspense>
+              ),
+            },
+            {
+              path: "dashboard/:name",
+              element: (
+                <Suspense fallback={<PageSkeleton />}>
+                  <DashboardView />
+                </Suspense>
+              ),
+            },
+            ...customRoutes,
+            {
+              path: ":doctype",
+              element: (
+                <Suspense fallback={<PageSkeleton />}>
+                  <ListView />
+                </Suspense>
+              ),
+            },
+            {
+              path: ":doctype/new",
+              element: (
+                <Suspense fallback={<PageSkeleton />}>
+                  <FormView />
+                </Suspense>
+              ),
+            },
+            {
+              path: ":doctype/:name",
+              element: (
+                <Suspense fallback={<PageSkeleton />}>
+                  <FormView />
+                </Suspense>
+              ),
+            },
+          ],
+        },
+        {
+          index: true,
+          element: <Navigate to="/desk/app" replace />,
+        },
+      ],
+    },
+  ]);
+}

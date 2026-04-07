@@ -5,6 +5,7 @@ import { NumberCard } from "@/components/dashboard/NumberCard";
 import { ChartWidget } from "@/components/dashboard/ChartWidget";
 import { ListWidget } from "@/components/dashboard/ListWidget";
 import { ShortcutCard } from "@/components/dashboard/ShortcutCard";
+import { getCustomWidgets } from "@/lib/widgetRegistry";
 
 export function DashboardView() {
   const { name = "" } = useParams<{ name: string }>();
@@ -72,6 +73,9 @@ export function DashboardView() {
               return null;
           }
         })}
+        {getCustomWidgets().map((w) => (
+          <w.component key={w.name} />
+        ))}
       </div>
     </div>
   );

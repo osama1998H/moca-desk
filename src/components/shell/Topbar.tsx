@@ -3,7 +3,27 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useWebSocket } from "@/providers/WebSocketProvider";
 import { useMetaType } from "@/providers/MetaProvider";
 import { cn } from "@/lib/utils";
-import { ChevronRightIcon, LogOutIcon } from "lucide-react";
+import { LogOutIcon } from "lucide-react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function Topbar() {
   const { doctype, name } = useParams<{ doctype: string; name: string }>();
@@ -13,71 +33,84 @@ export function Topbar() {
   // Only fetch meta when a doctype is present
   const { data: meta } = useMetaType(doctype ?? "");
 
-  // Build breadcrumb segments
-  const crumbs: { label: string; to?: string }[] = [
-    { label: "Home", to: "/desk/app" },
-  ];
+  const metaLabel = meta?.label || doctype || "";
 
-  if (doctype) {
-    crumbs.push({
-      label: meta?.label || doctype,
-      to: name ? `/desk/app/${doctype}` : undefined,
-    });
-  }
+  const displayName = user?.full_name ?? user?.email ?? "";
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
 
-  if (name) {
-    crumbs.push({
-      label: name === "new" ? "New" : name,
-    });
-  }
+  const connectionColor = cn(
+    "size-2 rounded-full",
+    connectionState === "connected" && "bg-green-500",
+    (connectionState === "connecting" || connectionState === "reconnecting") &&
+      "animate-pulse bg-amber-500",
+    connectionState === "disconnected" && "bg-muted-foreground/50",
+  );
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-gray-200 bg-white px-6">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-1 text-sm">
-        {crumbs.map((crumb, i) => (
-          <span key={i} className="flex items-center gap-1">
-            {i > 0 && (
-              <ChevronRightIcon className="size-3.5 text-gray-400" />
-            )}
-            {crumb.to ? (
-              <Link
-                to={crumb.to}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                {crumb.label}
-              </Link>
-            ) : (
-              <span className="font-medium text-gray-900">{crumb.label}</span>
-            )}
-          </span>
-        ))}
-      </nav>
-
-      {/* User menu */}
-      <div className="flex items-center gap-3">
-        <span
-          title={connectionState}
-          className={cn(
-            "inline-block size-1.5 rounded-full",
-            connectionState === "connected" && "bg-green-500",
-            (connectionState === "connecting" ||
-              connectionState === "reconnecting") &&
-              "animate-pulse bg-amber-500",
-            connectionState === "disconnected" && "bg-gray-400",
+    <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+      <SidebarTrigger className="-ml-1" />
+      <Separator orientation="vertical" className="mr-2 h-4" />
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link to="/desk/app">Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          {doctype && (
+            <>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                {name ? (
+                  <BreadcrumbLink asChild>
+                    <Link to={`/desk/app/${doctype}`}>{metaLabel}</Link>
+                  </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage>{metaLabel}</BreadcrumbPage>
+                )}
+              </BreadcrumbItem>
+            </>
           )}
-        />
-        <span className="text-sm text-gray-600">
-          {user?.full_name ?? user?.email}
-        </span>
-        <button
-          type="button"
-          onClick={() => void logout()}
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
-        >
-          <LogOutIcon className="size-3.5" />
-          Logout
-        </button>
+          {name && (
+            <>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{name === "new" ? "New" : name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </>
+          )}
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      <div className="ml-auto flex items-center gap-2">
+        <span title={connectionState} className={connectionColor} />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="gap-2">
+              <Avatar size="sm">
+                <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+              </Avatar>
+              <span className="text-sm">{displayName}</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuGroup>
+              <DropdownMenuItem disabled>Profile</DropdownMenuItem>
+              <DropdownMenuItem disabled>Settings</DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => void logout()}>
+              <LogOutIcon data-icon="inline-start" />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

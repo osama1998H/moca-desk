@@ -1,1 +1,1 @@
-export declare const router: import("react-router").DataRouter;
+export declare function createRouter(): import("react-router").DataRouter;

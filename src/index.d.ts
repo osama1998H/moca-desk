@@ -1,4 +1,16 @@
+export { createDeskApp } from "./createApp";
+export type { DeskAppConfig, DeskApp } from "./createApp";
+export type { DeskConfig } from "./config";
+export { useDeskConfig } from "./config";
+export { mocaDeskPlugin } from "./vite-plugin";
+export type { MocaDeskPluginOptions } from "./vite-plugin";
 export { registerFieldType } from "./lib/fieldTypeRegistry";
+export { registerPage } from "./lib/pageRegistry";
+export type { PageRegistration } from "./lib/pageRegistry";
+export { registerSidebarItem } from "./lib/sidebarRegistry";
+export type { SidebarItem, SidebarChildItem } from "./lib/sidebarRegistry";
+export { registerDashboardWidget } from "./lib/widgetRegistry";
+export type { WidgetRegistration } from "./lib/widgetRegistry";
 export type { FieldProps, LayoutFieldProps } from "./components/fields/types";
 export type { FieldType, FieldDef, MetaType, DocRecord } from "./api/types";
 export { FieldRenderer } from "./components/fields/FieldRenderer";

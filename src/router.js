@@ -5,6 +5,7 @@ import { RequireAuth } from "@/components/RequireAuth";
 import { DeskLayout } from "@/layouts/DeskLayout";
 import { Login } from "@/pages/Login";
 import { DeskHome } from "@/pages/DeskHome";
+import { getCustomPages } from "@/lib/pageRegistry";
 const ListView = lazy(() => import("@/pages/ListView"));
 const FormView = lazy(() => import("@/pages/FormView"));
 const ReportView = lazy(() => import("@/pages/ReportView"));
@@ -12,45 +13,52 @@ const DashboardView = lazy(() => import("@/pages/DashboardView"));
 function PageSkeleton() {
     return (_jsxs("div", { className: "space-y-4", children: [_jsx("div", { className: "h-8 w-48 animate-pulse rounded-lg bg-gray-200" }), _jsx("div", { className: "h-64 w-full animate-pulse rounded-lg bg-gray-100" })] }));
 }
-export const router = createBrowserRouter([
-    {
-        path: "/desk",
-        children: [
-            {
-                path: "login",
-                element: _jsx(Login, {}),
-            },
-            {
-                path: "app",
-                element: (_jsx(RequireAuth, { children: _jsx(DeskLayout, {}) })),
-                children: [
-                    { index: true, element: _jsx(DeskHome, {}) },
-                    {
-                        path: "report/:name",
-                        element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(ReportView, {}) })),
-                    },
-                    {
-                        path: "dashboard/:name",
-                        element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(DashboardView, {}) })),
-                    },
-                    {
-                        path: ":doctype",
-                        element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(ListView, {}) })),
-                    },
-                    {
-                        path: ":doctype/new",
-                        element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(FormView, {}) })),
-                    },
-                    {
-                        path: ":doctype/:name",
-                        element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(FormView, {}) })),
-                    },
-                ],
-            },
-            {
-                index: true,
-                element: _jsx(Navigate, { to: "/desk/app", replace: true }),
-            },
-        ],
-    },
-]);
+export function createRouter() {
+    const customRoutes = getCustomPages().map((page) => ({
+        path: page.path.replace(/^\/desk\/app\//, ""),
+        element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(page.component, {}) })),
+    }));
+    return createBrowserRouter([
+        {
+            path: "/desk",
+            children: [
+                {
+                    path: "login",
+                    element: _jsx(Login, {}),
+                },
+                {
+                    path: "app",
+                    element: (_jsx(RequireAuth, { children: _jsx(DeskLayout, {}) })),
+                    children: [
+                        { index: true, element: _jsx(DeskHome, {}) },
+                        {
+                            path: "report/:name",
+                            element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(ReportView, {}) })),
+                        },
+                        {
+                            path: "dashboard/:name",
+                            element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(DashboardView, {}) })),
+                        },
+                        ...customRoutes,
+                        {
+                            path: ":doctype",
+                            element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(ListView, {}) })),
+                        },
+                        {
+                            path: ":doctype/new",
+                            element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(FormView, {}) })),
+                        },
+                        {
+                            path: ":doctype/:name",
+                            element: (_jsx(Suspense, { fallback: _jsx(PageSkeleton, {}), children: _jsx(FormView, {}) })),
+                        },
+                    ],
+                },
+                {
+                    index: true,
+                    element: _jsx(Navigate, { to: "/desk/app", replace: true }),
+                },
+            ],
+        },
+    ]);
+}

@@ -1,19 +1,20 @@
 import { Outlet } from "react-router";
-import { Sidebar } from "@/components/shell/Sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import Sidebar from "@/components/shell/Sidebar";
 import { Topbar } from "@/components/shell/Topbar";
 import { CommandPalette } from "@/components/shell/CommandPalette";
 
 export function DeskLayout() {
   return (
-    <div className="flex h-screen bg-gray-50">
+    <SidebarProvider>
       <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <SidebarInset>
         <Topbar />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
-      </div>
+      </SidebarInset>
       <CommandPalette />
-    </div>
+    </SidebarProvider>
   );
 }

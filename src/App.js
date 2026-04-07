@@ -1,6 +1,5 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { RouterProvider } from "react-router";
-import { router } from "@/router";
-export function App() {
+export function App({ router, }) {
     return _jsx(RouterProvider, { router: router });
 }
