@@ -21,18 +21,28 @@ export class MocaApiError extends Error {
   }
 }
 
-// ── Token / site state (module-level, not in localStorage) ──────────────────
+// ── Token / site state (persisted to localStorage for reload survival) ───────
 
-let accessToken: string | null = null;
-let refreshToken: string | null = null;
+let accessToken: string | null = localStorage.getItem("moca_access_token");
+let refreshToken: string | null = localStorage.getItem("moca_refresh_token");
 let siteName: string = import.meta.env.VITE_MOCA_SITE ?? "";
 
 export function setAccessToken(token: string | null): void {
   accessToken = token;
+  if (token) {
+    localStorage.setItem("moca_access_token", token);
+  } else {
+    localStorage.removeItem("moca_access_token");
+  }
 }
 
 export function setRefreshToken(token: string | null): void {
   refreshToken = token;
+  if (token) {
+    localStorage.setItem("moca_refresh_token", token);
+  } else {
+    localStorage.removeItem("moca_refresh_token");
+  }
 }
 
 export function setSite(site: string): void {
