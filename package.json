@@ -33,7 +33,7 @@
     "prebuild": "test -f .moca-extensions.ts || echo '// No extensions' > .moca-extensions.ts",
     "dev": "vite --port 3000",
     "build": "tsc -b && vite build",
-    "build:lib": "tsc -p tsconfig.lib.json && tsc-alias -p tsconfig.lib.json",
+    "build:lib": "tsc -p tsconfig.lib.json && tsc-alias -p tsconfig.lib.json && cp src/index.css dist/index.css",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
