@@ -1,4 +1,4 @@
-// @moca/desk — Public API for app desk extensions.
+// @osama1998h/desk — Public API for app desk extensions.
 //
 // Apps import from this package to register custom field types, pages,
 // sidebar items, dashboard widgets, and compose UI extensions for the Moca Desk.
@@ -11,7 +11,7 @@ export type { DeskAppConfig, DeskApp } from "./createApp";
 export type { DeskConfig } from "./config";
 export { useDeskConfig } from "./config";
 
-// Vite plugin — available only via "@moca/desk/vite" entry point.
+// Vite plugin — available only via "@osama1998h/desk/vite" entry point.
 // NOT re-exported here to avoid pulling Node.js-only dependencies
 // (@tailwindcss/vite, @tailwindcss/oxide) into the client bundle.
 export type { MocaDeskPluginOptions } from "./vite-plugin";

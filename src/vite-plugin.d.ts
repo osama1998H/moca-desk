@@ -17,7 +17,7 @@ export interface MocaDeskPluginOptions {
  * Usage in a project's `vite.config.ts`:
  * ```ts
  * import { defineConfig } from "vite";
- * import { mocaDeskPlugin } from "@moca/desk/vite";
+ * import { mocaDeskPlugin } from "@osama1998h/desk/vite";
  *
  * export default defineConfig({
  *   plugins: [mocaDeskPlugin()],

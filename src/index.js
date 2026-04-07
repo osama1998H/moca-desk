@@ -1,11 +1,11 @@
-// @moca/desk — Public API for app desk extensions.
+// @osama1998h/desk — Public API for app desk extensions.
 //
 // Apps import from this package to register custom field types, pages,
 // sidebar items, dashboard widgets, and compose UI extensions for the Moca Desk.
 // App factory
 export { createDeskApp } from "./createApp";
 export { useDeskConfig } from "./config";
-// Vite plugin (re-exported for convenience; prefer "@moca/desk/vite" entry)
+// Vite plugin (re-exported for convenience; prefer "@osama1998h/desk/vite" entry)
 export { mocaDeskPlugin } from "./vite-plugin";
 // Field type registry
 export { registerFieldType } from "./lib/fieldTypeRegistry";

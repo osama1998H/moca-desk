@@ -36,7 +36,7 @@ export interface DeskApp {
  *
  * Usage in a project's `main.tsx`:
  * ```tsx
- * import { createDeskApp } from "@moca/desk";
+ * import { createDeskApp } from "@osama1998h/desk";
  * import "./.moca-extensions";
  *
  * createDeskApp().mount("#root");

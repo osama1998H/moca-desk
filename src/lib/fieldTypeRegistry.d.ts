@@ -10,6 +10,6 @@ export declare function registerFieldType(name: string, component: React.Compone
 /**
  * Look up a custom field type component by name.
  * Returns undefined if no custom component is registered for this type.
- * Internal to the Desk — not exported from @moca/desk.
+ * Internal to the Desk — not exported from @osama1998h/desk.
  */
 export declare function getCustomFieldType(name: string): React.ComponentType<FieldProps> | undefined;
