@@ -10,10 +10,18 @@
     "directory": "desk"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./vite": "./src/vite-plugin.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./vite": {
+      "types": "./dist/vite-plugin.d.ts",
+      "import": "./dist/vite-plugin.js"
+    }
   },
+  "types": "./dist/index.d.ts",
   "files": [
+    "dist",
     "src"
   ],
   "publishConfig": {
@@ -25,6 +33,7 @@
     "prebuild": "test -f .moca-extensions.ts || echo '// No extensions' > .moca-extensions.ts",
     "dev": "vite --port 3000",
     "build": "tsc -b && vite build",
+    "build:lib": "tsc -p tsconfig.lib.json",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
