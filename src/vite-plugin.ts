@@ -1,3 +1,4 @@
+import path from "node:path";
 import type { Plugin, PluginOption, UserConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -45,10 +46,34 @@ export function mocaDeskPlugin(
   const mocaPlugin: Plugin = {
     name: "moca-desk",
     config(): UserConfig {
+      // Resolve shared dependencies so that app extension files living outside
+      // desk/ (e.g. apps/library/desk/pages/Foo.tsx) find the correct packages.
+      const nodeModules = path.resolve(process.cwd(), "node_modules");
+      const projectRoot = path.resolve(process.cwd(), "..");
+
       return {
         base: basePath,
+        resolve: {
+          alias: {
+            "@osama1998h/desk": path.resolve(nodeModules, "@osama1998h/desk"),
+            react: path.resolve(nodeModules, "react"),
+            "react-dom": path.resolve(nodeModules, "react-dom"),
+            "react/jsx-runtime": path.resolve(
+              nodeModules,
+              "react/jsx-runtime",
+            ),
+            "react/jsx-dev-runtime": path.resolve(
+              nodeModules,
+              "react/jsx-dev-runtime",
+            ),
+          },
+        },
         server: {
           port,
+          fs: {
+            // Allow Vite to serve files from the project root (covers apps/*/desk/**)
+            allow: [projectRoot],
+          },
           proxy: {
             "/api": { target: apiTarget, changeOrigin: true },
             "/ws": { target: wsTarget, ws: true },
