@@ -33,16 +33,16 @@ export function ChartWidget({
   const chartData = (data?.data as Record<string, unknown>[]) ?? [];
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-5">
-      <p className="mb-3 text-sm font-medium text-gray-700">{label}</p>
+    <div className="rounded-lg border border-border bg-card p-5">
+      <p className="mb-3 text-sm font-medium text-foreground">{label}</p>
       {isLoading ? (
         <div className="flex h-48 items-center justify-center">
-          <Loader2Icon className="size-5 animate-spin text-gray-400" />
+          <Loader2Icon className="size-5 animate-spin text-muted-foreground" />
         </div>
       ) : error ? (
-        <p className="text-sm text-red-500">Failed to load chart</p>
+        <p className="text-sm text-destructive">Failed to load chart</p>
       ) : chartData.length === 0 ? (
-        <p className="text-sm text-gray-400">No data</p>
+        <p className="text-sm text-muted-foreground">No data</p>
       ) : (
         <ResponsiveContainer width="100%" height={200}>
           {chartType === "line" ? (

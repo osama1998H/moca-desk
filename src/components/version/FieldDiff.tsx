@@ -19,12 +19,12 @@ export function FieldDiff({ label, oldValue, newValue }: FieldDiffProps) {
 
   return (
     <div className="space-y-1">
-      <span className="text-xs font-medium text-gray-600">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
       <div className="flex flex-col gap-0.5 text-sm">
         <Tag
           className={cn(
             "rounded px-2 py-0.5 break-words",
-            "bg-red-50 text-red-800",
+            "bg-destructive/10 text-destructive",
             isComplex && "overflow-x-auto whitespace-pre-wrap text-xs",
           )}
         >
@@ -33,7 +33,7 @@ export function FieldDiff({ label, oldValue, newValue }: FieldDiffProps) {
         <Tag
           className={cn(
             "rounded px-2 py-0.5 break-words",
-            "bg-green-50 text-green-800",
+            "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
             isComplex && "overflow-x-auto whitespace-pre-wrap text-xs",
           )}
         >

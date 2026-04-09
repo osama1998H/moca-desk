@@ -5,7 +5,7 @@ export function DeskHome() {
   const { user } = useAuth()
 
   return (
-    <div className="p-6">
+    <div>
       <Card>
         <CardHeader>
           <CardTitle>Welcome to Moca Desk</CardTitle>

@@ -6,7 +6,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { useReportMeta, useReportExecute } from "@/providers/ReportProvider";
 import { ReportFilters } from "@/components/report/ReportFilters";
 import { ReportTable } from "@/components/report/ReportTable";
@@ -54,7 +54,7 @@ export function ReportView() {
 
   if (metaLoading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-gray-500">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Loader2Icon className="size-4 animate-spin" />
         Loading report...
       </div>
@@ -63,7 +63,7 @@ export function ReportView() {
 
   if (metaError) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+      <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
         {metaError.message}
       </div>
     );
@@ -79,22 +79,22 @@ export function ReportView() {
   return (
     <div>
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">{meta.name}</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-xl font-semibold text-foreground">{meta.name}</h1>
+          <p className="text-sm text-muted-foreground">
             Report on {meta.doc_type}
           </p>
         </div>
         {rows.length > 0 && (
-          <button
-            type="button"
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => exportCSV(meta.columns, rows)}
-            className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
           >
-            <DownloadIcon className="size-3.5" />
+            <DownloadIcon data-icon="inline-start" />
             Export CSV
-          </button>
+          </Button>
         )}
       </div>
 
@@ -125,37 +125,27 @@ export function ReportView() {
 
       {/* Pagination */}
       {total > 0 && (
-        <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
+        <div className="mt-3 flex items-center justify-between text-sm text-muted-foreground">
           <span>
             Showing {from}–{to} of {total}
           </span>
           <div className="flex items-center gap-1">
-            <button
-              type="button"
+            <Button
+              variant="outline"
+              size="icon-xs"
               onClick={() => handlePage(Math.max(0, page - 1))}
               disabled={page === 0}
-              className={cn(
-                "rounded border border-gray-300 p-1",
-                page === 0
-                  ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-gray-50",
-              )}
             >
-              <ChevronLeftIcon className="size-4" />
-            </button>
-            <button
-              type="button"
+              <ChevronLeftIcon />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon-xs"
               onClick={() => handlePage(page + 1)}
               disabled={to >= total}
-              className={cn(
-                "rounded border border-gray-300 p-1",
-                to >= total
-                  ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-gray-50",
-              )}
             >
-              <ChevronRightIcon className="size-4" />
-            </button>
+              <ChevronRightIcon />
+            </Button>
           </div>
         </div>
       )}

@@ -47,20 +47,20 @@ export function ReportTable({ columns, data, isLoading }: ReportTableProps) {
   }, [data, sortField, sortOrder]);
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+    <div className="overflow-x-auto rounded-lg border border-border bg-card">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
+          <tr className="border-b border-border bg-muted">
             {columns.map((col) => (
               <th
                 key={col.field_name}
-                className="px-4 py-2.5 font-medium text-gray-700"
+                className="px-4 py-2.5 font-medium text-foreground"
                 style={col.width ? { width: col.width } : undefined}
               >
                 <button
                   type="button"
                   onClick={() => handleSort(col.field_name)}
-                  className="inline-flex items-center gap-1 hover:text-gray-900"
+                  className="inline-flex items-center gap-1 hover:text-foreground"
                 >
                   {col.label}
                   {sortField === col.field_name ? (
@@ -70,7 +70,7 @@ export function ReportTable({ columns, data, isLoading }: ReportTableProps) {
                       <ChevronDownIcon className="size-3.5" />
                     )
                   ) : (
-                    <ChevronsUpDownIcon className="size-3.5 text-gray-400" />
+                    <ChevronsUpDownIcon className="size-3.5 text-muted-foreground" />
                   )}
                 </button>
               </th>
@@ -82,7 +82,7 @@ export function ReportTable({ columns, data, isLoading }: ReportTableProps) {
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-8 text-center text-gray-500"
+                className="px-4 py-8 text-center text-muted-foreground"
               >
                 <Loader2Icon className="mx-auto size-5 animate-spin" />
               </td>
@@ -91,7 +91,7 @@ export function ReportTable({ columns, data, isLoading }: ReportTableProps) {
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-8 text-center text-gray-500"
+                className="px-4 py-8 text-center text-muted-foreground"
               >
                 No data. Run the report to see results.
               </td>
@@ -101,12 +101,12 @@ export function ReportTable({ columns, data, isLoading }: ReportTableProps) {
               <tr
                 key={i}
                 className={cn(
-                  "border-b border-gray-100",
-                  i % 2 === 1 && "bg-gray-50/50",
+                  "border-b border-border",
+                  i % 2 === 1 && "bg-muted/50",
                 )}
               >
                 {columns.map((col) => (
-                  <td key={col.field_name} className="px-4 py-2.5 text-gray-700">
+                  <td key={col.field_name} className="px-4 py-2.5 text-foreground">
                     {formatValue(row[col.field_name], col.field_type)}
                   </td>
                 ))}

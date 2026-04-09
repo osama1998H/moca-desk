@@ -15,18 +15,18 @@ export function ShortcutCard({ config }: ShortcutCardProps) {
   return (
     <Link
       to={url}
-      className="group flex items-center justify-between rounded-lg border border-gray-200 bg-white p-5 transition-colors hover:border-gray-300"
+      className="group flex items-center justify-between rounded-lg border border-border bg-card p-5 transition-colors hover:border-border/80"
     >
       <div className="flex items-center gap-3">
         <div
           className="size-2.5 rounded-full"
           style={{ backgroundColor: color }}
         />
-        <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+        <span className="text-sm font-medium text-foreground group-hover:text-foreground">
           {label}
         </span>
       </div>
-      <ArrowRightIcon className="size-4 text-gray-400 group-hover:text-gray-600" />
+      <ArrowRightIcon className="size-4 text-muted-foreground group-hover:text-foreground" />
     </Link>
   );
 }

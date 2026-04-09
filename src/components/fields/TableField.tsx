@@ -134,7 +134,7 @@ export function TableField({
                       {idx + 1}
                     </td>
                     {visibleFields.map((f) => (
-                      <td key={f.name} className="px-1 py-0.5">
+                      <td key={f.name} className="px-2 py-1">
                         <FieldRenderer
                           fieldDef={{ ...f, label: "", required: false }}
                           value={row[f.name]}
@@ -144,7 +144,7 @@ export function TableField({
                       </td>
                     ))}
                     {!readOnly && (
-                      <td className="px-1 py-1 text-center">
+                      <td className="px-2 py-1 text-center">
                         <Button
                           variant="ghost"
                           size="icon-xs"

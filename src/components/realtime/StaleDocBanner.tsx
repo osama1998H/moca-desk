@@ -1,4 +1,5 @@
 import { RefreshCwIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface StaleDocBannerProps {
   user: string;
@@ -7,19 +8,20 @@ interface StaleDocBannerProps {
 
 export function StaleDocBanner({ user, onReload }: StaleDocBannerProps) {
   return (
-    <div className="mb-4 flex items-center justify-between rounded-md border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800">
+    <div className="mb-4 flex items-center justify-between rounded-md border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
       <span>
         This document was modified by <strong>{user}</strong>. Reload to see
         changes.
       </span>
-      <button
-        type="button"
+      <Button
+        variant="outline"
+        size="xs"
         onClick={onReload}
-        className="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-white px-2.5 py-1 text-xs font-medium text-amber-800 hover:bg-amber-50"
+        className="border-amber-300 text-amber-800 hover:bg-amber-50 dark:border-amber-500/30 dark:text-amber-300 dark:hover:bg-amber-500/10"
       >
-        <RefreshCwIcon className="size-3" />
+        <RefreshCwIcon data-icon="inline-start" />
         Reload
-      </button>
+      </Button>
     </div>
   );
 }

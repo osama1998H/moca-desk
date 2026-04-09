@@ -1,5 +1,5 @@
 import { type DeskConfig } from "@/config";
-import "@/index.css";
+import "./index.css";
 export interface DeskAppConfig extends Partial<DeskConfig> {
     /** Override React Query defaults. */
     queryClientOptions?: {

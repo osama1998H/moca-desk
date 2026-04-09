@@ -23,6 +23,7 @@ import { VersionHistory } from "@/components/version/VersionHistory";
 import { LAYOUT_TYPES } from "@/components/fields/types";
 import { MocaApiError } from "@/api/client";
 import type { DocRecord, FieldDef } from "@/api/types";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SaveIcon, XIcon, Loader2Icon, HistoryIcon } from "lucide-react";
 
@@ -181,7 +182,7 @@ export function FormView() {
 
   if (metaLoading || (!isNew && docLoading)) {
     return (
-      <div className="flex items-center gap-2 text-sm text-gray-500">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Loader2Icon className="size-4 animate-spin" />
         Loading...
       </div>
@@ -190,7 +191,7 @@ export function FormView() {
 
   if (metaError || docError) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+      <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
         {metaError?.message || docError?.message || "Failed to load"}
       </div>
     );
@@ -213,46 +214,45 @@ export function FormView() {
       {/* Title bar */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">{docTitle}</h1>
+          <h1 className="text-xl font-semibold text-foreground">{docTitle}</h1>
           {isDirty && (
             <span className="text-xs text-amber-600">Unsaved changes</span>
           )}
         </div>
         <div className="flex items-center gap-2">
           {!isNew && meta.track_changes && (
-            <button
-              type="button"
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setHistoryOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
             >
-              <HistoryIcon className="size-3.5" />
+              <HistoryIcon data-icon="inline-start" />
               History
-            </button>
+            </Button>
           )}
           {!readOnly && (
             <>
-              <button
-                type="button"
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleCancel}
                 disabled={isSaving}
-                className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50"
               >
-                <XIcon className="size-3.5" />
+                <XIcon data-icon="inline-start" />
                 Cancel
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                size="sm"
                 onClick={() => void handleSave()}
                 disabled={isSaving || (!isNew && !isDirty)}
-                className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
               >
                 {isSaving ? (
-                  <Loader2Icon className="size-3.5 animate-spin" />
+                  <Loader2Icon data-icon="inline-start" className="animate-spin" />
                 ) : (
-                  <SaveIcon className="size-3.5" />
+                  <SaveIcon data-icon="inline-start" />
                 )}
                 Save
-              </button>
+              </Button>
             </>
           )}
         </div>
@@ -273,7 +273,7 @@ export function FormView() {
 
       {/* Tab bar */}
       {layout.tabs.length > 1 && (
-        <div className="mb-4 flex gap-1 border-b border-gray-200">
+        <div className="mb-4 flex gap-1 border-b border-border">
           {layout.tabs.map((tab, i) => (
             <button
               key={tab.label}
@@ -282,8 +282,8 @@ export function FormView() {
               className={cn(
                 "px-4 py-2 text-sm font-medium transition-colors",
                 i === activeTab
-                  ? "border-b-2 border-blue-600 text-blue-600"
-                  : "text-gray-500 hover:text-gray-700",
+                  ? "border-b-2 border-primary text-primary"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {tab.label}

@@ -2,8 +2,16 @@ import { useMemo, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { useDocVersions } from "@/hooks/useDocVersions";
 import { FieldDiff } from "@/components/version/FieldDiff";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { XIcon, ChevronDownIcon, Loader2Icon } from "lucide-react";
+import { ChevronDownIcon, Loader2Icon } from "lucide-react";
 import type { FieldDef } from "@/api/types";
 import type { VersionRecord } from "@/api/ws-types";
 
@@ -37,44 +45,22 @@ export function VersionHistory({
   const versions = data?.pages.flatMap((p) => p.data) ?? [];
 
   return (
-    <>
-      {/* Backdrop */}
-      {open && (
-        <div
-          className="fixed inset-0 z-40 bg-black/20"
-          onClick={onClose}
-        />
-      )}
+    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
+      <SheetContent side="right" className="w-96 sm:max-w-96">
+        <SheetHeader>
+          <SheetTitle>Version History</SheetTitle>
+          <SheetDescription className="sr-only">
+            Document change history
+          </SheetDescription>
+        </SheetHeader>
 
-      {/* Panel */}
-      <div
-        className={cn(
-          "fixed right-0 top-0 z-50 flex h-full w-96 flex-col border-l border-gray-200 bg-white shadow-lg transition-transform duration-200",
-          open ? "translate-x-0" : "translate-x-full",
-        )}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
-          <h2 className="text-sm font-semibold text-gray-900">
-            Version History
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-          >
-            <XIcon className="size-4" />
-          </button>
-        </div>
-
-        {/* Body */}
-        <div className="flex-1 overflow-y-auto px-4 py-3">
+        <div className="flex-1 overflow-y-auto px-4 pb-4">
           {isLoading ? (
-            <div className="flex items-center justify-center py-8 text-gray-400">
+            <div className="flex items-center justify-center py-8 text-muted-foreground">
               <Loader2Icon className="size-5 animate-spin" />
             </div>
           ) : versions.length === 0 ? (
-            <p className="py-8 text-center text-sm text-gray-500">
+            <p className="py-8 text-center text-sm text-muted-foreground">
               No versions recorded yet.
             </p>
           ) : (
@@ -92,22 +78,22 @@ export function VersionHistory({
           {/* Load more */}
           {hasNextPage && (
             <div className="mt-3 text-center">
-              <button
-                type="button"
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => void fetchNextPage()}
                 disabled={isFetchingNextPage}
-                className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-50"
               >
                 {isFetchingNextPage && (
-                  <Loader2Icon className="size-3 animate-spin" />
+                  <Loader2Icon data-icon="inline-start" className="animate-spin" />
                 )}
                 Load more
-              </button>
+              </Button>
             </div>
           )}
         </div>
-      </div>
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }
 
@@ -135,18 +121,18 @@ function VersionEntry({
   }
 
   return (
-    <div className="rounded-md border border-gray-100 bg-gray-50/50">
+    <div className="rounded-md border border-border bg-muted/50">
       <button
         type="button"
         onClick={() => setExpanded((e) => !e)}
         className="flex w-full items-center gap-2 px-3 py-2.5 text-left"
       >
         <div className="min-w-0 flex-1">
-          <div className="text-xs font-medium text-gray-900">
+          <div className="text-xs font-medium text-foreground">
             {version.owner}
           </div>
-          <div className="text-xs text-gray-500">{relativeTime}</div>
-          <div className="mt-0.5 text-xs text-gray-500">
+          <div className="text-xs text-muted-foreground">{relativeTime}</div>
+          <div className="mt-0.5 text-xs text-muted-foreground">
             {isInitial
               ? "Initial version"
               : `Changed ${String(changedCount)} field${changedCount !== 1 ? "s" : ""}`}
@@ -155,7 +141,7 @@ function VersionEntry({
         {!isInitial && changedCount > 0 && (
           <ChevronDownIcon
             className={cn(
-              "size-3.5 shrink-0 text-gray-400 transition-transform",
+              "size-3.5 shrink-0 text-muted-foreground transition-transform",
               expanded && "rotate-180",
             )}
           />
@@ -164,7 +150,7 @@ function VersionEntry({
 
       {/* Expanded diff */}
       {expanded && changed && (
-        <div className="space-y-2 border-t border-gray-100 px-3 py-2.5">
+        <div className="space-y-2 border-t border-border px-3 py-2.5">
           {Object.entries(changed).map(([field, diff]) => (
             <FieldDiff
               key={field}

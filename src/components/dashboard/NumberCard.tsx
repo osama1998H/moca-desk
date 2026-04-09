@@ -21,18 +21,18 @@ export function NumberCard({
   const color = (config.color as string) ?? "#3b82f6";
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-5">
+    <div className="rounded-lg border border-border bg-card p-5">
       <div
         className="mb-2 h-1 w-10 rounded-full"
         style={{ backgroundColor: color }}
       />
-      <p className="text-sm text-gray-500">{label}</p>
+      <p className="text-sm text-muted-foreground">{label}</p>
       {isLoading ? (
-        <Loader2Icon className="mt-2 size-5 animate-spin text-gray-400" />
+        <Loader2Icon className="mt-2 size-5 animate-spin text-muted-foreground" />
       ) : error ? (
-        <p className="mt-1 text-sm text-red-500">Failed to load</p>
+        <p className="mt-1 text-sm text-destructive">Failed to load</p>
       ) : (
-        <p className="mt-1 text-3xl font-semibold text-gray-900">
+        <p className="mt-1 text-3xl font-semibold text-foreground">
           {formatNumber(data?.value)}
         </p>
       )}

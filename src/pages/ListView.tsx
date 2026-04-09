@@ -7,7 +7,8 @@ import { usePermissions } from "@/providers/PermissionProvider";
 import { useWebSocket } from "@/providers/WebSocketProvider";
 import { LAYOUT_TYPES } from "@/components/fields/types";
 import type { FieldDef, FilterTuple } from "@/api/types";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   PlusIcon,
   ChevronUpIcon,
@@ -56,15 +57,15 @@ function FilterBar({
   if (filterFields.length === 0) return null;
 
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-2">
+    <div className="mb-4 flex flex-wrap items-end gap-3">
       {filterFields.map((f) => (
-        <div key={f.name} className="flex items-center gap-1">
-          <label className="text-xs text-gray-500">{f.label}:</label>
+        <div key={f.name} className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-muted-foreground">{f.label}</label>
           {f.field_type === "Select" && f.options ? (
             <select
               value={values[f.name] ?? ""}
               onChange={(e) => handleChange(f.name, e.target.value)}
-              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              className="h-8 rounded-md border border-input bg-background px-2.5 text-sm ring-ring/50 focus:border-ring focus:ring-3"
             >
               <option value="">All</option>
               {f.options.split("\n").map((opt) => (
@@ -77,19 +78,19 @@ function FilterBar({
             <select
               value={values[f.name] ?? ""}
               onChange={(e) => handleChange(f.name, e.target.value)}
-              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              className="h-8 rounded-md border border-input bg-background px-2.5 text-sm ring-ring/50 focus:border-ring focus:ring-3"
             >
               <option value="">All</option>
               <option value="1">Yes</option>
               <option value="0">No</option>
             </select>
           ) : (
-            <input
+            <Input
               type="text"
               value={values[f.name] ?? ""}
               onChange={(e) => handleChange(f.name, e.target.value)}
               placeholder={f.label}
-              className="w-32 rounded border border-gray-300 px-2 py-1 text-sm"
+              className="w-32"
             />
           )}
         </div>
@@ -110,7 +111,7 @@ function SortIcon({
   sortOrder: "asc" | "desc";
 }) {
   if (sortField !== field) {
-    return <ChevronsUpDownIcon className="size-3.5 text-gray-400" />;
+    return <ChevronsUpDownIcon className="size-3.5 text-muted-foreground" />;
   }
   return sortOrder === "asc" ? (
     <ChevronUpIcon className="size-3.5" />
@@ -215,7 +216,7 @@ export function ListView() {
 
   if (metaLoading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-gray-500">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Loader2Icon className="size-4 animate-spin" />
         Loading...
       </div>
@@ -224,7 +225,7 @@ export function ListView() {
 
   if (metaError) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+      <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
         {metaError.message}
       </div>
     );
@@ -240,18 +241,17 @@ export function ListView() {
   return (
     <div>
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-gray-900">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-xl font-semibold text-foreground">
           {meta.label || doctype}
         </h1>
         {canCreate && (
-          <Link
-            to={`/desk/app/${doctype}/new`}
-            className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-sm text-white hover:bg-blue-700"
-          >
-            <PlusIcon className="size-3.5" />
-            New
-          </Link>
+          <Button size="sm" asChild>
+            <Link to={`/desk/app/${doctype}/new`}>
+              <PlusIcon data-icon="inline-start" />
+              New
+            </Link>
+          </Button>
         )}
       </div>
 
@@ -259,19 +259,19 @@ export function ListView() {
       <FilterBar filterFields={filterFields} onApply={handleFilters} />
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+      <div className="overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-gray-200 bg-gray-50">
+            <tr className="border-b border-border bg-muted">
               {visibleColumns.map((col) => (
                 <th
                   key={col.name}
-                  className="px-4 py-2.5 font-medium text-gray-700"
+                  className="px-4 py-2.5 font-medium text-foreground"
                 >
                   <button
                     type="button"
                     onClick={() => handleSort(col.name)}
-                    className="inline-flex items-center gap-1 hover:text-gray-900"
+                    className="inline-flex items-center gap-1 hover:text-foreground"
                   >
                     {col.label}
                     <SortIcon
@@ -289,7 +289,7 @@ export function ListView() {
               <tr>
                 <td
                   colSpan={visibleColumns.length}
-                  className="px-4 py-8 text-center text-gray-500"
+                  className="px-4 py-8 text-center text-muted-foreground"
                 >
                   <Loader2Icon className="mx-auto size-5 animate-spin" />
                 </td>
@@ -298,7 +298,7 @@ export function ListView() {
               <tr>
                 <td
                   colSpan={visibleColumns.length}
-                  className="px-4 py-8 text-center text-gray-500"
+                  className="px-4 py-8 text-center text-muted-foreground"
                 >
                   No records found
                 </td>
@@ -312,10 +312,10 @@ export function ListView() {
                       `/desk/app/${doctype}/${encodeURIComponent(String(row.name))}`,
                     )
                   }
-                  className="cursor-pointer border-b border-gray-100 hover:bg-gray-50"
+                  className="cursor-pointer border-b border-border hover:bg-muted"
                 >
                   {visibleColumns.map((col) => (
-                    <td key={col.name} className="px-4 py-2.5 text-gray-700">
+                    <td key={col.name} className="px-4 py-2.5 text-foreground">
                       {formatCellValue(row[col.name], col)}
                     </td>
                   ))}
@@ -328,37 +328,27 @@ export function ListView() {
 
       {/* Pagination */}
       {total > 0 && (
-        <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
+        <div className="mt-3 flex items-center justify-between text-sm text-muted-foreground">
           <span>
             Showing {from}–{to} of {total}
           </span>
           <div className="flex items-center gap-1">
-            <button
-              type="button"
+            <Button
+              variant="outline"
+              size="icon-xs"
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
-              className={cn(
-                "rounded border border-gray-300 p-1",
-                page === 0
-                  ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-gray-50",
-              )}
             >
-              <ChevronLeftIcon className="size-4" />
-            </button>
-            <button
-              type="button"
+              <ChevronLeftIcon />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon-xs"
               onClick={() => setPage((p) => p + 1)}
               disabled={to >= total}
-              className={cn(
-                "rounded border border-gray-300 p-1",
-                to >= total
-                  ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-gray-50",
-              )}
             >
-              <ChevronRightIcon className="size-4" />
-            </button>
+              <ChevronRightIcon />
+            </Button>
           </div>
         </div>
       )}
