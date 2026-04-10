@@ -9,6 +9,7 @@ import { createRouter } from "@/router";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { DeskConfigContext, defaultConfig, type DeskConfig } from "@/config";
+import { setSite } from "@/api/client";
 import "./index.css";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -46,6 +47,12 @@ export function createDeskApp(userConfig: DeskAppConfig = {}): DeskApp {
   const { queryClientOptions, ...configOverrides } = userConfig;
 
   const config: DeskConfig = { ...defaultConfig, ...configOverrides };
+
+  // Propagate siteName to the API client module so HTTP requests
+  // include the correct X-Moca-Site header even outside React context.
+  if (config.siteName) {
+    setSite(config.siteName);
+  }
 
   const queryClient = new QueryClient({
     defaultOptions: {

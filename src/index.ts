@@ -11,6 +11,9 @@ export type { DeskAppConfig, DeskApp } from "./createApp";
 export type { DeskConfig } from "./config";
 export { useDeskConfig } from "./config";
 
+// API client utilities
+export { setSite } from "./api/client";
+
 // Vite plugin — available only via "@osama1998h/desk/vite" entry point.
 // NOT re-exported here to avoid pulling Node.js-only dependencies
 // (@tailwindcss/vite, @tailwindcss/oxide) into the client bundle.
