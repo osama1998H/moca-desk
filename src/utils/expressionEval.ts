@@ -140,5 +140,6 @@ export function evaluateMandatoryDependsOn(
   expression: string | undefined,
   doc: DocValues,
 ): boolean {
+  if (!expression) return false;
   return evaluateDependsOn(expression, doc);
 }
