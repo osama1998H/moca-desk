@@ -20,6 +20,8 @@ import { FieldRenderer } from "@/components/fields/FieldRenderer";
 import { SectionBreak } from "@/components/layout/SectionBreak";
 import { StaleDocBanner } from "@/components/realtime/StaleDocBanner";
 import { VersionHistory } from "@/components/version/VersionHistory";
+import { WorkflowBar } from "@/components/workflow/WorkflowBar";
+import { WorkflowTimeline } from "@/components/workflow/WorkflowTimeline";
 import { LAYOUT_TYPES } from "@/components/fields/types";
 import { MocaApiError } from "@/api/client";
 import type { DocRecord, FieldDef } from "@/api/types";
@@ -230,6 +232,9 @@ export function FormView() {
               History
             </Button>
           )}
+          {!isNew && name && meta.is_submittable && (
+            <WorkflowTimeline doctype={doctype} name={name} />
+          )}
           {!readOnly && (
             <>
               <Button
@@ -257,6 +262,13 @@ export function FormView() {
           )}
         </div>
       </div>
+
+      {/* Workflow bar */}
+      {!isNew && name && meta.is_submittable && (
+        <div className="mb-4">
+          <WorkflowBar doctype={doctype} name={name} />
+        </div>
+      )}
 
       {/* Stale document banner (dirty form + remote change) */}
       {isDirty && isStale && lastEvent && (
