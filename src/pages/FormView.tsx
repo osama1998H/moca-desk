@@ -232,7 +232,7 @@ export function FormView() {
               History
             </Button>
           )}
-          {!isNew && name && meta.is_submittable && (
+          {!isNew && name && (
             <WorkflowTimeline doctype={doctype} name={name} />
           )}
           {!readOnly && (
@@ -264,7 +264,7 @@ export function FormView() {
       </div>
 
       {/* Workflow bar */}
-      {!isNew && name && meta.is_submittable && (
+      {!isNew && name && (
         <div className="mb-4">
           <WorkflowBar doctype={doctype} name={name} />
         </div>
