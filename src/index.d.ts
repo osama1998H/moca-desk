@@ -2,7 +2,7 @@ export { createDeskApp } from "./createApp";
 export type { DeskAppConfig, DeskApp } from "./createApp";
 export type { DeskConfig } from "./config";
 export { useDeskConfig } from "./config";
-export { mocaDeskPlugin } from "./vite-plugin";
+export { setSite } from "./api/client";
 export type { MocaDeskPluginOptions } from "./vite-plugin";
 export { registerFieldType } from "./lib/fieldTypeRegistry";
 export { registerPage } from "./lib/pageRegistry";
