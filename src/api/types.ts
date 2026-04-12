@@ -276,3 +276,55 @@ export interface DashDef {
   label: string;
   widgets: DashWidget[];
 }
+
+// ── Workflow Types ──────────────────────────────────────────
+
+export interface WorkflowBranchStatus {
+  branch: string;
+  state: string;
+  style: string;
+  is_active: boolean;
+  entered_at: string;
+  sla_deadline?: string;
+}
+
+export interface WorkflowStatus {
+  workflow_name: string;
+  is_parallel: boolean;
+  branches: WorkflowBranchStatus[];
+}
+
+export interface WorkflowAvailableAction {
+  action: string;
+  to_state: string;
+  branch_name: string;
+  require_comment: boolean;
+  style: string;
+}
+
+export interface WorkflowStateResponse {
+  status: WorkflowStatus;
+  actions: WorkflowAvailableAction[];
+}
+
+export interface WorkflowActionRecord {
+  id: string;
+  action: string;
+  from_state: string;
+  to_state: string;
+  branch_name: string;
+  user: string;
+  comment: string;
+  timestamp: string;
+}
+
+export interface WorkflowTransitionRequest {
+  action: string;
+  comment?: string;
+  branch?: string;
+}
+
+export interface WorkflowTransitionResponse {
+  status: string;
+  state: WorkflowStatus;
+}
