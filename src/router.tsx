@@ -10,6 +10,7 @@ const ListView = lazy(() => import("@/pages/ListView"));
 const FormView = lazy(() => import("@/pages/FormView"));
 const ReportView = lazy(() => import("@/pages/ReportView"));
 const DashboardView = lazy(() => import("@/pages/DashboardView"));
+const DocTypeBuilder = lazy(() => import("@/pages/DocTypeBuilder"));
 
 function PageSkeleton() {
   return (
@@ -60,6 +61,22 @@ export function createRouter() {
               element: (
                 <Suspense fallback={<PageSkeleton />}>
                   <DashboardView />
+                </Suspense>
+              ),
+            },
+            {
+              path: "doctype-builder",
+              element: (
+                <Suspense fallback={<PageSkeleton />}>
+                  <DocTypeBuilder />
+                </Suspense>
+              ),
+            },
+            {
+              path: "doctype-builder/:name",
+              element: (
+                <Suspense fallback={<PageSkeleton />}>
+                  <DocTypeBuilder />
                 </Suspense>
               ),
             },
