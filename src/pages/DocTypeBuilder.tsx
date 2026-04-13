@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { DndContext, closestCenter, type DragEndEvent } from "@dnd-kit/core";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { post, put } from "@/api/client";
 import { Plus, Settings, Shield } from "lucide-react";
 
 import { useMetaType } from "@/providers/MetaProvider";
@@ -66,6 +67,7 @@ function findFieldLocation(
 
 export default function DocTypeBuilder() {
   const { name: urlName } = useParams<{ name?: string }>();
+  const navigate = useNavigate();
   const store = useDocTypeBuilderStore();
 
   // Fetch existing doctype metadata if editing
@@ -171,11 +173,89 @@ export default function DocTypeBuilder() {
     }
   }
 
-  // ── Save handler (placeholder) ────────────────────────────────────────
+  // ── Save handler ─────────────────────────────────────────────────────
 
-  function handleSave() {
-    toast.info("Save not implemented yet");
-  }
+  const handleSave = useCallback(async () => {
+    if (!store.name) {
+      toast.error("DocType name is required");
+      return;
+    }
+    if (!store.module) {
+      toast.error("Module is required");
+      return;
+    }
+
+    try {
+      const payload = {
+        name: store.name,
+        app: store.app,
+        module: store.module,
+        layout: store.layout,
+        fields: store.fields,
+        settings: store.settings,
+        permissions: store.permissions,
+      };
+
+      if (store.isNew) {
+        await post("dev/doctype", payload);
+        store.markClean();
+        navigate(`/desk/app/doctype-builder/${store.name}`, { replace: true });
+        toast.success(`${store.name} created`);
+      } else {
+        await put(`dev/doctype/${store.name}`, payload);
+        store.markClean();
+        toast.success(`${store.name} saved`);
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Save failed";
+      toast.error(message);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store, navigate]);
+
+  // ── Keyboard shortcuts ────────────────────────────────────────────────
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey;
+
+      // Cmd+S: Save
+      if (mod && e.key === "s") {
+        e.preventDefault();
+        void handleSave();
+      }
+
+      // Backspace/Delete: Delete selected field (only when not in an input)
+      if (
+        (e.key === "Backspace" || e.key === "Delete") &&
+        store.selection?.type === "field" &&
+        document.activeElement?.tagName !== "INPUT" &&
+        document.activeElement?.tagName !== "TEXTAREA"
+      ) {
+        e.preventDefault();
+        store.removeField(store.selection.id);
+      }
+
+      // Escape: Clear selection and close drawer
+      if (e.key === "Escape") {
+        store.setSelection(null);
+        store.setActiveDrawer(null);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store.selection, handleSave]);
+
+  // ── beforeunload warning ──────────────────────────────────────────────
+
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (store.isDirty) e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [store.isDirty]);
 
   // ── Drawer content ────────────────────────────────────────────────────
 

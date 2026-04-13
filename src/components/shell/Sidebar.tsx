@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import { useDocList } from "@/providers/DocProvider";
-import { ChevronRightIcon, HomeIcon, SearchIcon, FileTextIcon } from "lucide-react";
+import { BlocksIcon, ChevronRightIcon, HomeIcon, SearchIcon, FileTextIcon } from "lucide-react";
 import { getCustomSidebarItems } from "@/lib/sidebarRegistry";
 import { getIconComponent } from "@/lib/iconMap";
 import {
@@ -109,7 +109,7 @@ export default function Sidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {/* Home link */}
+        {/* Home link + top-level nav */}
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -117,6 +117,14 @@ export default function Sidebar() {
                 <Link to="/desk/app">
                   <HomeIcon data-icon />
                   <span>Home</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link to="/desk/app/doctype-builder">
+                  <BlocksIcon data-icon />
+                  <span>DocType Builder</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

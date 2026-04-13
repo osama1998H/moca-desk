@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { useDocList } from "@/providers/DocProvider";
-import { HomeIcon } from "lucide-react";
+import { BlocksIcon, HomeIcon } from "lucide-react";
 import {
   CommandDialog,
   Command,
@@ -86,6 +86,15 @@ export function CommandPalette() {
             >
               <HomeIcon data-icon="inline-start" />
               Home
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                setOpen(false);
+                void navigate("/desk/app/doctype-builder");
+              }}
+            >
+              <BlocksIcon data-icon="inline-start" />
+              New DocType
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
