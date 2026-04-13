@@ -86,8 +86,30 @@ export interface FieldDef {
   layout_label?: string;
 }
 
+// ── Layout Types ─────────────────────────────────────────────────────────────
+// Mirrors meta.LayoutTree, meta.TabDef, meta.SectionDef, meta.ColumnDef
+// in pkg/meta/layout.go.
+
+export interface LayoutTree {
+  tabs: TabDef[];
+}
+export interface TabDef {
+  label: string;
+  sections: SectionDef[];
+}
+export interface SectionDef {
+  label?: string;
+  collapsible?: boolean;
+  collapsed_by_default?: boolean;
+  columns: ColumnDef[];
+}
+export interface ColumnDef {
+  width?: number;
+  fields: string[];
+}
+
 // ── MetaType ────────────────────────────────────────────────────────────────
-// Mirrors apiMetaResponse in pkg/api/rest.go:398-419.
+// Mirrors apiMetaResponse in pkg/api/rest.go.
 
 export interface MetaType {
   name: string;
@@ -101,6 +123,8 @@ export interface MetaType {
   sort_order?: string;
   search_fields?: string[];
   fields: FieldDef[];
+  layout?: LayoutTree;
+  fields_map?: Record<string, FieldDef>;
   is_single: boolean;
   is_submittable: boolean;
   is_child_table: boolean;
