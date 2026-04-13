@@ -15,6 +15,7 @@ import {
 import { PropertyPanel } from "@/components/builder-kit/PropertyPanel";
 import { useDocTypeBuilderStore } from "@/stores/doctype-builder-store";
 import { SchematicCanvas } from "@/components/doctype-builder/SchematicCanvas";
+import { PreviewMode } from "@/components/doctype-builder/PreviewMode";
 import { FieldPalette } from "@/components/doctype-builder/FieldPalette";
 import { SettingsDrawer } from "@/components/doctype-builder/SettingsDrawer";
 import { PermissionsDrawer } from "@/components/doctype-builder/PermissionsDrawer";
@@ -365,7 +366,7 @@ export default function DocTypeBuilder() {
           </>
         }
       >
-        <SchematicCanvas />
+        {store.mode === "schematic" ? <SchematicCanvas /> : <PreviewMode />}
       </BuilderShell>
     </DndContext>
   );
