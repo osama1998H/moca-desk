@@ -11,11 +11,13 @@ import {
   DrawerPanel,
   type IconRailItem,
 } from "@/components/builder-kit";
+import { PropertyPanel } from "@/components/builder-kit/PropertyPanel";
 import { useDocTypeBuilderStore } from "@/stores/doctype-builder-store";
 import { SchematicCanvas } from "@/components/doctype-builder/SchematicCanvas";
 import { FieldPalette } from "@/components/doctype-builder/FieldPalette";
 import { SettingsDrawer } from "@/components/doctype-builder/SettingsDrawer";
 import { PermissionsDrawer } from "@/components/doctype-builder/PermissionsDrawer";
+import { getFieldPropertySchema } from "@/components/doctype-builder/property-schemas";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -190,6 +192,29 @@ export default function DocTypeBuilder() {
     }
   }
 
+  // ── Right panel (property inspector) ─────────────────────────────────────
+
+  function renderRightPanel() {
+    const { selection } = store;
+    if (!selection || selection.type !== "field") return undefined;
+
+    const fd = store.fields[selection.id];
+    if (!fd) return undefined;
+
+    const schema = getFieldPropertySchema(fd.field_type);
+
+    return (
+      <PropertyPanel
+        schema={schema}
+        values={fd as unknown as Record<string, unknown>}
+        onChange={(key, val) =>
+          store.updateField(selection.id, { [key]: val } as Parameters<typeof store.updateField>[1])
+        }
+        title={fd.label || fd.name}
+      />
+    );
+  }
+
   // ── Loading state ─────────────────────────────────────────────────────
 
   if (urlName && isLoading) {
@@ -250,6 +275,7 @@ export default function DocTypeBuilder() {
         activeDrawer={store.activeDrawer}
         onDrawerToggle={(id) => store.toggleDrawer(id as "fields" | "settings" | "permissions")}
         leftDrawer={renderDrawer()}
+        rightPanel={renderRightPanel()}
         statusBar={
           <>
             <span>{fieldCount} field{fieldCount !== 1 ? "s" : ""}</span>
