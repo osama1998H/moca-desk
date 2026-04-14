@@ -7,7 +7,7 @@ export interface DrawerPanelProps {
 
 export function DrawerPanel({ title, children }: DrawerPanelProps) {
   return (
-    <div className="w-64 overflow-y-auto border-r bg-background">
+    <div className="h-full w-64 overflow-y-auto overscroll-contain border-r bg-background">
       {title && (
         <div className="sticky top-0 border-b bg-background px-3 py-2 text-sm font-medium">
           {title}
