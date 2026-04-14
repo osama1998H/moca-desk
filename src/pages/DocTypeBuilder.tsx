@@ -20,6 +20,7 @@ import { FieldPalette } from "@/components/doctype-builder/FieldPalette";
 import { SettingsDrawer } from "@/components/doctype-builder/SettingsDrawer";
 import { PermissionsDrawer } from "@/components/doctype-builder/PermissionsDrawer";
 import { getFieldPropertySchema } from "@/components/doctype-builder/property-schemas";
+import { labelToFieldName } from "@/components/doctype-builder/types";
 
 import { Label } from "@/components/ui/label";
 
@@ -303,9 +304,29 @@ export default function DocTypeBuilder() {
       <PropertyPanel
         schema={schema}
         values={fd as unknown as Record<string, unknown>}
-        onChange={(key, val) =>
-          store.updateField(selection.id, { [key]: val } as Parameters<typeof store.updateField>[1])
-        }
+        onChange={(key, val) => {
+          const patch: Record<string, unknown> = { [key]: val };
+
+          // Auto-sync field name when label changes, unless user manually edited the name
+          if (key === "label" && typeof val === "string") {
+            const currentField = store.fields[selection.id];
+            if (currentField) {
+              const nameMatchesLabel =
+                currentField.name === labelToFieldName(currentField.label);
+              if (nameMatchesLabel) {
+                const newName = labelToFieldName(val);
+                if (newName && newName !== currentField.name) {
+                  patch.name = newName;
+                }
+              }
+            }
+          }
+
+          store.updateField(
+            selection.id,
+            patch as Parameters<typeof store.updateField>[1],
+          );
+        }}
         title={fd.label || fd.name}
       />
     );

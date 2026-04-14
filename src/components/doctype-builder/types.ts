@@ -72,6 +72,18 @@ export function generateFieldName(
   return `${base}_${n}`;
 }
 
+/**
+ * Convert a human label to a snake_case field name.
+ * "Full Name" -> "full_name", "Date of Birth!" -> "date_of_birth"
+ */
+export function labelToFieldName(label: string): string {
+  return label
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "_")
+    .replace(/[^a-z0-9_]/g, "");
+}
+
 // ── Default values ──────────────────────────────────────────────────────────
 
 export const DEFAULT_SETTINGS: DocTypeSettings = {
