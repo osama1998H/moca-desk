@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DndContext, closestCenter, type DragEndEvent } from "@dnd-kit/core";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
@@ -21,7 +21,6 @@ import { SettingsDrawer } from "@/components/doctype-builder/SettingsDrawer";
 import { PermissionsDrawer } from "@/components/doctype-builder/PermissionsDrawer";
 import { getFieldPropertySchema } from "@/components/doctype-builder/property-schemas";
 
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import type { FieldType } from "@/api/types";
@@ -258,6 +257,22 @@ export default function DocTypeBuilder() {
     return () => window.removeEventListener("beforeunload", handler);
   }, [store.isDirty]);
 
+  // ── Fetch available apps for dev API selectors ─────────────────────
+
+  const [appList, setAppList] = useState<{ name: string; modules: string[] }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/v1/dev/apps")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((json) => {
+        if (json?.data) setAppList(json.data);
+      })
+      .catch(() => {});
+  }, []);
+
+  const selectedAppModules =
+    appList.find((a) => a.name === store.app)?.modules ?? [];
+
   // ── Drawer content ────────────────────────────────────────────────────
 
   function renderDrawer() {
@@ -329,25 +344,42 @@ export default function DocTypeBuilder() {
                 <Label htmlFor="builder-app" className="text-xs text-muted-foreground">
                   App
                 </Label>
-                <Input
+                <select
                   id="builder-app"
                   value={store.app ?? ""}
-                  onChange={(e) => store.setApp(e.target.value || null)}
-                  placeholder="App"
-                  className="h-7 w-24 text-xs"
-                />
+                  onChange={(e) => {
+                    const val = e.target.value || null;
+                    store.setApp(val);
+                    store.setModule("");
+                  }}
+                  className="h-7 w-28 rounded-md border bg-background px-2 text-xs"
+                >
+                  <option value="">Select app...</option>
+                  {appList.map((a) => (
+                    <option key={a.name} value={a.name}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex items-center gap-1">
                 <Label htmlFor="builder-module" className="text-xs text-muted-foreground">
                   Module
                 </Label>
-                <Input
+                <select
                   id="builder-module"
                   value={store.module}
                   onChange={(e) => store.setModule(e.target.value)}
-                  placeholder="Module"
-                  className="h-7 w-24 text-xs"
-                />
+                  className="h-7 w-28 rounded-md border bg-background px-2 text-xs"
+                  disabled={!store.app}
+                >
+                  <option value="">Select module...</option>
+                  {selectedAppModules.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </BuilderToolbar>
