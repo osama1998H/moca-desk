@@ -34,6 +34,23 @@ export interface FieldDef {
     col_span?: number;
     layout_label?: string;
 }
+export interface LayoutTree {
+    tabs: TabDef[];
+}
+export interface TabDef {
+    label: string;
+    sections: SectionDef[];
+}
+export interface SectionDef {
+    label?: string;
+    collapsible?: boolean;
+    collapsed_by_default?: boolean;
+    columns: ColumnDef[];
+}
+export interface ColumnDef {
+    width?: number;
+    fields: string[];
+}
 export interface MetaType {
     name: string;
     label?: string;
@@ -46,6 +63,8 @@ export interface MetaType {
     sort_order?: string;
     search_fields?: string[];
     fields: FieldDef[];
+    layout?: LayoutTree;
+    fields_map?: Record<string, FieldDef>;
     is_single: boolean;
     is_submittable: boolean;
     is_child_table: boolean;
