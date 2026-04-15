@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { DndContext, closestCenter, type DragEndEvent } from "@dnd-kit/core";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
-import { post, put } from "@/api/client";
+import { get, post, put } from "@/api/client";
 import { Plus, Settings, Shield } from "lucide-react";
 
 import { useMetaType } from "@/providers/MetaProvider";
@@ -24,7 +24,7 @@ import { labelToFieldName } from "@/components/doctype-builder/types";
 
 import { Label } from "@/components/ui/label";
 
-import type { FieldType } from "@/api/types";
+import type { ApiResponse, FieldType } from "@/api/types";
 
 // ── Icon rail items ─────────────────────────────────────────────────────────
 
@@ -263,11 +263,8 @@ export default function DocTypeBuilder() {
   const [appList, setAppList] = useState<{ name: string; modules: string[] }[]>([]);
 
   useEffect(() => {
-    fetch("/api/v1/dev/apps")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((json) => {
-        if (json?.data) setAppList(json.data);
-      })
+    get<ApiResponse<{ name: string; modules: string[] }[]>>("dev/apps")
+      .then((res) => setAppList(res.data))
       .catch(() => {});
   }, []);
 
