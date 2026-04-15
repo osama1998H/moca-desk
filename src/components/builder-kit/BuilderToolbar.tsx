@@ -3,6 +3,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
+/**
+ * Auto-format input to PascalCase for DocType names.
+ * "library member" -> "LibraryMember", "my-thing" -> "MyThing"
+ */
+function toPascalCase(input: string): string {
+  return input
+    .replace(/[^a-zA-Z0-9\s\-_]/g, "")
+    .split(/[\s\-_]+|(?<=[a-z0-9])(?=[A-Z])/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join("");
+}
+
 export interface BuilderToolbarProps {
   name: string;
   onNameChange: (name: string) => void;
@@ -29,9 +42,9 @@ export function BuilderToolbar({
       <div className="flex items-center gap-2">
         <Input
           value={name}
-          onChange={(e) => onNameChange(e.target.value)}
+          onChange={(e) => onNameChange(toPascalCase(e.target.value))}
           className="h-7 w-48 text-sm font-medium"
-          placeholder="Untitled"
+          placeholder="e.g. LibraryMember"
         />
       </div>
 
