@@ -3,7 +3,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,8 @@ interface ColumnNodeProps {
   tabIdx: number;
   sectionIdx: number;
   colIdx: number;
+  onRemoveColumn: () => void;
+  totalColumns: number;
 }
 
 // ── ColumnNode ───────────────────────────────────────────────────────────────
@@ -28,6 +30,8 @@ export function ColumnNode({
   tabIdx,
   sectionIdx,
   colIdx,
+  onRemoveColumn,
+  totalColumns,
 }: ColumnNodeProps) {
   const fields = useDocTypeBuilderStore((s) => s.fields);
   const selection = useDocTypeBuilderStore((s) => s.selection);
@@ -49,10 +53,21 @@ export function ColumnNode({
       <div
         ref={setNodeRef}
         className={cn(
-          "min-h-[60px] rounded border border-dashed p-1.5 space-y-1",
+          "group/col relative min-h-[60px] rounded border border-dashed p-1.5 space-y-1",
           isOver && "border-primary bg-primary/5",
         )}
       >
+        {totalColumns > 1 && (
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={onRemoveColumn}
+            className="absolute -top-1 -right-1 h-5 w-5 opacity-0 group-hover/col:opacity-100 text-destructive hover:text-destructive z-10"
+          >
+            <Trash2 className="h-3 w-3" />
+            <span className="sr-only">Delete column</span>
+          </Button>
+        )}
         {column.fields.map((fieldName) => {
           const fieldDef = fields[fieldName];
           if (!fieldDef) return null;

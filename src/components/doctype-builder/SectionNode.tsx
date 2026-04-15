@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import type { SectionDef } from "@/api/types";
+import { useDocTypeBuilderStore } from "@/stores/doctype-builder-store";
 import { ColumnNode } from "./ColumnNode";
 
 // ── Props ─────────────────────────────────────────────────────────────────────
@@ -32,6 +33,8 @@ export function SectionNode({
   onRemoveSection,
   onUpdateLabel,
 }: SectionNodeProps) {
+  const removeColumn = useDocTypeBuilderStore((s) => s.removeColumn);
+
   return (
     <div className="rounded-lg border bg-background p-3 mb-3">
       {/* Header */}
@@ -72,6 +75,8 @@ export function SectionNode({
               tabIdx={tabIdx}
               sectionIdx={sectionIdx}
               colIdx={colIdx}
+              onRemoveColumn={() => removeColumn(tabIdx, sectionIdx, colIdx)}
+              totalColumns={section.columns.length}
             />
           </div>
         ))}
