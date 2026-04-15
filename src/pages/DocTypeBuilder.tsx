@@ -186,6 +186,14 @@ export default function DocTypeBuilder() {
       return;
     }
 
+    // Validate all fields have a type
+    for (const [key, fd] of Object.entries(store.fields)) {
+      if (!fd.field_type) {
+        toast.error(`Field "${fd.label || key}" has no field type`);
+        return;
+      }
+    }
+
     try {
       const payload = {
         name: store.name,
