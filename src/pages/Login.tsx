@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { useNavigate, useSearchParams } from "react-router"
 import { useAuth } from "@/providers/AuthProvider"
+import { useI18n } from "@/providers/I18nProvider"
 import { MocaApiError } from "@/api/client"
 import {
   Card,
@@ -20,6 +21,7 @@ export function Login() {
   const { login, isAuthenticated } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { t } = useI18n()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -42,7 +44,7 @@ export function Login() {
       if (err instanceof MocaApiError) {
         setError(err.message)
       } else {
-        setError("An unexpected error occurred. Please try again.")
+        setError(t("An unexpected error occurred. Please try again."))
       }
     } finally {
       setSubmitting(false)
@@ -54,7 +56,7 @@ export function Login() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Moca</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
+          <CardDescription>{t("Sign in to your account")}</CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
@@ -66,7 +68,7 @@ export function Login() {
           <form onSubmit={(e) => void handleSubmit(e)}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email">{t("Email")}</FieldLabel>
                 <Input
                   id="email"
                   type="email"
@@ -78,7 +80,7 @@ export function Login() {
                 />
               </Field>
               <Field>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <FieldLabel htmlFor="password">{t("Password")}</FieldLabel>
                 <Input
                   id="password"
                   type="password"
@@ -96,7 +98,7 @@ export function Login() {
               disabled={submitting}
             >
               {submitting && <Spinner data-icon="inline-start" />}
-              {submitting ? "Signing in..." : "Sign in"}
+              {submitting ? t("Signing in...") : t("Sign in")}
             </Button>
           </form>
         </CardContent>

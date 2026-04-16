@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 import { useAuth } from "@/providers/AuthProvider";
 import { useWebSocket } from "@/providers/WebSocketProvider";
 import { useMetaType } from "@/providers/MetaProvider";
+import { useI18n } from "@/providers/I18nProvider";
 import { cn } from "@/lib/utils";
 import { LogOutIcon } from "lucide-react";
 import { LanguageSwitcher } from "@/components/shell/LanguageSwitcher";
@@ -30,6 +31,7 @@ export function Topbar() {
   const { doctype, name } = useParams<{ doctype: string; name: string }>();
   const { user, logout } = useAuth();
   const { connectionState } = useWebSocket();
+  const { t } = useI18n();
 
   // Only fetch meta when a doctype is present
   const { data: meta } = useMetaType(doctype ?? "");
@@ -60,7 +62,7 @@ export function Topbar() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link to="/desk/app">Home</Link>
+              <Link to="/desk/app">{t("Home")}</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           {doctype && (
@@ -81,7 +83,7 @@ export function Topbar() {
             <>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>{name === "new" ? "New" : name}</BreadcrumbPage>
+                <BreadcrumbPage>{name === "new" ? t("New") : name}</BreadcrumbPage>
               </BreadcrumbItem>
             </>
           )}
@@ -104,13 +106,13 @@ export function Topbar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuGroup>
-              <DropdownMenuItem disabled>Profile</DropdownMenuItem>
-              <DropdownMenuItem disabled>Settings</DropdownMenuItem>
+              <DropdownMenuItem disabled>{t("Profile")}</DropdownMenuItem>
+              <DropdownMenuItem disabled>{t("Settings")}</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => void logout()}>
               <LogOutIcon data-icon="inline-start" />
-              Log out
+              {t("Log out")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

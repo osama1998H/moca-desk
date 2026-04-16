@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import { useDocList } from "@/providers/DocProvider";
+import { useI18n } from "@/providers/I18nProvider";
 import { BlocksIcon, ChevronRightIcon, HomeIcon, SearchIcon, FileTextIcon } from "lucide-react";
 import { getCustomSidebarItems } from "@/lib/sidebarRegistry";
 import { getIconComponent } from "@/lib/iconMap";
@@ -34,6 +35,7 @@ interface DoctypeEntry {
 export default function Sidebar() {
   const { doctype: activeDoctype } = useParams<{ doctype: string }>();
   const [search, setSearch] = useState("");
+  const { t } = useI18n();
 
   // Fetch available doctypes
   const { data: listData } = useDocList("DocType", {
@@ -97,7 +99,7 @@ export default function Sidebar() {
               </Label>
               <SidebarInput
                 id="search"
-                placeholder="Search..."
+                placeholder={t("Search...")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-8"
@@ -116,7 +118,7 @@ export default function Sidebar() {
               <SidebarMenuButton asChild isActive={!activeDoctype}>
                 <Link to="/desk/app">
                   <HomeIcon data-icon />
-                  <span>Home</span>
+                  <span>{t("Home")}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -124,7 +126,7 @@ export default function Sidebar() {
               <SidebarMenuButton asChild>
                 <Link to="/desk/app/doctype-builder">
                   <BlocksIcon data-icon />
-                  <span>DocType Builder</span>
+                  <span>{t("DocType Builder")}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { useDocList } from "@/providers/DocProvider";
+import { useI18n } from "@/providers/I18nProvider";
 import { BlocksIcon, HomeIcon } from "lucide-react";
 import {
   CommandDialog,
@@ -23,6 +24,7 @@ interface DoctypeItem {
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   // Fetch doctypes
   const { data: listData } = useDocList("DocType", {
@@ -70,14 +72,14 @@ export function CommandPalette() {
     <CommandDialog
       open={open}
       onOpenChange={setOpen}
-      title="Search DocTypes"
-      description="Search and navigate to any DocType"
+      title={t("Search DocTypes")}
+      description={t("Search and navigate to any DocType")}
     >
       <Command>
-        <CommandInput placeholder="Search doctypes..." />
+        <CommandInput placeholder={t("Search doctypes...")} />
         <CommandList>
-          <CommandEmpty>No doctypes found.</CommandEmpty>
-          <CommandGroup heading="Navigation">
+          <CommandEmpty>{t("No doctypes found.")}</CommandEmpty>
+          <CommandGroup heading={t("Navigation")}>
             <CommandItem
               onSelect={() => {
                 setOpen(false);
@@ -85,7 +87,7 @@ export function CommandPalette() {
               }}
             >
               <HomeIcon data-icon="inline-start" />
-              Home
+              {t("Home")}
             </CommandItem>
             <CommandItem
               onSelect={() => {
@@ -94,7 +96,7 @@ export function CommandPalette() {
               }}
             >
               <BlocksIcon data-icon="inline-start" />
-              New DocType
+              {t("New DocType")}
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import { useI18n } from "@/providers/I18nProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMetaType } from "@/providers/MetaProvider";
 import { useDocList } from "@/providers/DocProvider";
@@ -26,9 +27,11 @@ const DEFAULT_PAGE_SIZE = 20;
 function FilterBar({
   filterFields,
   onApply,
+  t,
 }: {
   filterFields: FieldDef[];
   onApply: (filters: FilterTuple[]) => void;
+  t: (source: string) => string;
 }) {
   const [values, setValues] = useState<Record<string, string>>({});
 
@@ -67,7 +70,7 @@ function FilterBar({
               onChange={(e) => handleChange(f.name, e.target.value)}
               className="h-8 rounded-md border border-input bg-background px-2.5 text-sm ring-ring/50 focus:border-ring focus:ring-3"
             >
-              <option value="">All</option>
+              <option value="">{t("All")}</option>
               {f.options.split("\n").map((opt) => (
                 <option key={opt} value={opt}>
                   {opt}
@@ -80,9 +83,9 @@ function FilterBar({
               onChange={(e) => handleChange(f.name, e.target.value)}
               className="h-8 rounded-md border border-input bg-background px-2.5 text-sm ring-ring/50 focus:border-ring focus:ring-3"
             >
-              <option value="">All</option>
-              <option value="1">Yes</option>
-              <option value="0">No</option>
+              <option value="">{t("All")}</option>
+              <option value="1">{t("Yes")}</option>
+              <option value="0">{t("No")}</option>
             </select>
           ) : (
             <Input
@@ -125,6 +128,7 @@ function SortIcon({
 export function ListView() {
   const { doctype = "" } = useParams<{ doctype: string }>();
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   const { data: meta, isLoading: metaLoading, error: metaError } = useMetaType(doctype);
   const { canCreate } = usePermissions(doctype);
@@ -218,7 +222,7 @@ export function ListView() {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Loader2Icon className="size-4 animate-spin" />
-        Loading...
+        {t("Loading...")}
       </div>
     );
   }
@@ -249,14 +253,14 @@ export function ListView() {
           <Button size="sm" asChild>
             <Link to={`/desk/app/${doctype}/new`}>
               <PlusIcon data-icon="inline-start" />
-              New
+              {t("New")}
             </Link>
           </Button>
         )}
       </div>
 
       {/* Filter bar */}
-      <FilterBar filterFields={filterFields} onApply={handleFilters} />
+      <FilterBar filterFields={filterFields} onApply={handleFilters} t={t} />
 
       {/* Table */}
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
@@ -300,7 +304,7 @@ export function ListView() {
                   colSpan={visibleColumns.length}
                   className="px-4 py-8 text-center text-muted-foreground"
                 >
-                  No records found
+                  {t("No records found")}
                 </td>
               </tr>
             ) : (
@@ -330,7 +334,7 @@ export function ListView() {
       {total > 0 && (
         <div className="mt-3 flex items-center justify-between text-sm text-muted-foreground">
           <span>
-            Showing {from}–{to} of {total}
+            {t("Showing")} {from}–{to} {t("of")} {total}
           </span>
           <div className="flex items-center gap-1">
             <Button

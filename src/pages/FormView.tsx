@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useI18n } from "@/providers/I18nProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useMetaType } from "@/providers/MetaProvider";
@@ -63,6 +64,7 @@ function getDefaults(fields: FieldDef[]): DocRecord {
 export function FormView() {
   const { doctype = "", name } = useParams<{ doctype: string; name: string }>();
   const navigate = useNavigate();
+  const { t } = useI18n();
   const isNew = !name || name === "new";
 
   const { data: meta, isLoading: metaLoading, error: metaError } = useMetaType(doctype);
@@ -186,7 +188,7 @@ export function FormView() {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Loader2Icon className="size-4 animate-spin" />
-        Loading...
+        {t("Loading...")}
       </div>
     );
   }
@@ -194,7 +196,7 @@ export function FormView() {
   if (metaError || docError) {
     return (
       <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-        {metaError?.message || docError?.message || "Failed to load"}
+        {metaError?.message || docError?.message || t("Failed to load")}
       </div>
     );
   }
@@ -206,7 +208,7 @@ export function FormView() {
 
   // Document title
   const docTitle = isNew
-    ? `New ${meta.label || doctype}`
+    ? `${t("New")} ${meta.label || doctype}`
     : meta.title_field
       ? String(formValues[meta.title_field] || formValues.name || name)
       : String(formValues.name || name);
@@ -218,7 +220,7 @@ export function FormView() {
         <div>
           <h1 className="text-xl font-semibold text-foreground">{docTitle}</h1>
           {isDirty && (
-            <span className="text-xs text-amber-600">Unsaved changes</span>
+            <span className="text-xs text-amber-600">{t("Unsaved changes")}</span>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -229,7 +231,7 @@ export function FormView() {
               onClick={() => setHistoryOpen(true)}
             >
               <HistoryIcon data-icon="inline-start" />
-              History
+              {t("History")}
             </Button>
           )}
           {!isNew && name && (
@@ -244,7 +246,7 @@ export function FormView() {
                 disabled={isSaving}
               >
                 <XIcon data-icon="inline-start" />
-                Cancel
+                {t("Cancel")}
               </Button>
               <Button
                 size="sm"
@@ -256,7 +258,7 @@ export function FormView() {
                 ) : (
                   <SaveIcon data-icon="inline-start" />
                 )}
-                Save
+                {t("Save")}
               </Button>
             </>
           )}
