@@ -39,7 +39,7 @@ export function AttachImageField({
             <Button
               variant="secondary"
               size="icon-xs"
-              className="absolute right-1 top-1"
+              className="absolute end-1 top-1"
               onClick={() => onChange("")}
             >
               <XIcon />

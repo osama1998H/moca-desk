@@ -98,7 +98,7 @@ export function TableField({
                   {visibleFields.map((f) => (
                     <th
                       key={f.name}
-                      className="px-2 py-1.5 text-left text-xs font-medium text-muted-foreground"
+                      className="px-2 py-1.5 text-start text-xs font-medium text-muted-foreground"
                     >
                       {f.label}
                       {f.required && (

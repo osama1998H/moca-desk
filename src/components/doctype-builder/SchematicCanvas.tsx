@@ -97,7 +97,7 @@ export function SchematicCanvas() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="ml-0.5 h-5 w-5 opacity-0 group-hover:opacity-100"
+                        className="ms-0.5 h-5 w-5 opacity-0 group-hover:opacity-100"
                       >
                         <MoreHorizontal className="h-3 w-3" />
                         <span className="sr-only">Tab options</span>

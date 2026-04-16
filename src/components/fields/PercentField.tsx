@@ -16,7 +16,7 @@ export function PercentField({
         <Input
           id={fieldDef.name}
           type="number"
-          className="pr-7"
+          className="pe-7"
           value={value ?? ""}
           onChange={(e) => {
             const v = e.target.value;
@@ -30,7 +30,7 @@ export function PercentField({
           placeholder="0"
           aria-invalid={!!error}
         />
-        <span className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-sm text-muted-foreground">
+        <span className="pointer-events-none absolute inset-y-0 end-2.5 flex items-center text-sm text-muted-foreground">
           %
         </span>
       </div>

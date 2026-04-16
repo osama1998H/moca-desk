@@ -419,7 +419,7 @@ export default function DocTypeBuilder() {
           <>
             <span>{fieldCount} field{fieldCount !== 1 ? "s" : ""}</span>
             {store.isDirty && (
-              <span className="ml-2 text-amber-500">Modified</span>
+              <span className="ms-2 text-amber-500">Modified</span>
             )}
           </>
         }

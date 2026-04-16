@@ -110,7 +110,7 @@ export function CommandPalette() {
                 >
                   <span>{dt.label || dt.name}</span>
                   {dt.module && (
-                    <Badge variant="secondary" className="ml-auto">
+                    <Badge variant="secondary" className="ms-auto">
                       {dt.module}
                     </Badge>
                   )}

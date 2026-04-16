@@ -45,7 +45,7 @@ export function ListWidget({
                   {item.name != null ? String(item.name) : ""}
                 </span>
                 {item.modified != null && (
-                  <span className="ml-2 shrink-0 text-xs text-muted-foreground">
+                  <span className="ms-2 shrink-0 text-xs text-muted-foreground">
                     {String(item.modified).slice(0, 10)}
                   </span>
                 )}

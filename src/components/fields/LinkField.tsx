@@ -36,7 +36,7 @@ export function LinkField({
           {value && (
             <a
               href={`/desk/app/${targetDoctype}/${encodeURIComponent(value as string)}`}
-              className="ml-auto shrink-0 text-muted-foreground hover:text-foreground"
+              className="ms-auto shrink-0 text-muted-foreground hover:text-foreground"
             >
               <ExternalLinkIcon className="size-3.5" />
             </a>
@@ -100,7 +100,7 @@ export function LinkField({
                   key={item.value}
                   type="button"
                   className={cn(
-                    "flex w-full items-center px-2.5 py-1.5 text-left text-sm hover:bg-accent",
+                    "flex w-full items-center px-2.5 py-1.5 text-start text-sm hover:bg-accent",
                     item.value === value && "bg-accent",
                   )}
                   onClick={() => {

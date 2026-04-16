@@ -97,7 +97,7 @@ export function PermissionsDrawer() {
           onClick={addRow}
           className="mt-1 w-full"
         >
-          <Plus className="mr-1 h-3 w-3" />
+          <Plus className="me-1 h-3 w-3" />
           Add Role
         </Button>
       </div>

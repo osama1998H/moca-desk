@@ -69,7 +69,7 @@ export function BuilderShell({
 
         {/* Left drawer */}
         {leftDrawer && activeDrawer && (
-          <div className="h-full overflow-hidden animate-in slide-in-from-left-2">
+          <div className="h-full overflow-hidden animate-in slide-in-from-start-2">
             {leftDrawer}
           </div>
         )}

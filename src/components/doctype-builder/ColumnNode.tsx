@@ -62,7 +62,7 @@ export function ColumnNode({
             variant="ghost"
             size="icon-xs"
             onClick={onRemoveColumn}
-            className="absolute -top-1 -right-1 h-5 w-5 opacity-0 group-hover/col:opacity-100 text-destructive hover:text-destructive z-10"
+            className="absolute -top-1 -end-1 h-5 w-5 opacity-0 group-hover/col:opacity-100 text-destructive hover:text-destructive z-10"
           >
             <Trash2 className="h-3 w-3" />
             <span className="sr-only">Delete column</span>

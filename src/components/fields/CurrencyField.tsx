@@ -13,13 +13,13 @@ export function CurrencyField({
   return (
     <FieldWrapper fieldDef={fieldDef} error={error} className={className}>
       <div className="relative">
-        <span className="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-sm text-muted-foreground">
+        <span className="pointer-events-none absolute inset-y-0 start-2.5 flex items-center text-sm text-muted-foreground">
           {fieldDef.options || "$"}
         </span>
         <Input
           id={fieldDef.name}
           type="number"
-          className="pl-7"
+          className="ps-7"
           value={value ?? ""}
           onChange={(e) => {
             const v = e.target.value;

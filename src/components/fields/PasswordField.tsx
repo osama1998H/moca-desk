@@ -27,14 +27,14 @@ export function PasswordField({
           disabled={readOnly}
           maxLength={fieldDef.max_length}
           placeholder={fieldDef.label}
-          className="pr-9"
+          className="pe-9"
           aria-invalid={!!error}
         />
         <Button
           type="button"
           variant="ghost"
           size="icon-xs"
-          className="absolute inset-y-0 right-1 my-auto"
+          className="absolute inset-y-0 end-1 my-auto"
           onClick={() => setVisible((v) => !v)}
           tabIndex={-1}
         >

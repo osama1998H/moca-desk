@@ -54,7 +54,7 @@ export function DatetimeField({
             disabled={readOnly}
             aria-invalid={!!error}
             className={cn(
-              "w-full justify-start text-left font-normal",
+              "w-full justify-start text-start font-normal",
               !value && "text-muted-foreground",
             )}
           >

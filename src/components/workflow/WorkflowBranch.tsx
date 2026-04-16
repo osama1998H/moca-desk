@@ -71,7 +71,7 @@ export function WorkflowBranch({
           </TooltipContent>
         </Tooltip>
       )}
-      <div className="ml-auto flex gap-2">
+      <div className="ms-auto flex gap-2">
         {branchActions.map((action) => (
           <WorkflowActionButton
             key={action.action + action.branch_name}

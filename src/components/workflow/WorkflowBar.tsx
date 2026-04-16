@@ -20,7 +20,7 @@ export function WorkflowBar({ doctype, name }: WorkflowBarProps) {
         <CardHeader>
           <div className="flex items-center gap-2">
             <Skeleton className="h-5 w-32" />
-            <div className="ml-auto flex gap-2">
+            <div className="ms-auto flex gap-2">
               <Skeleton className="h-7 w-20" />
               <Skeleton className="h-7 w-20" />
             </div>

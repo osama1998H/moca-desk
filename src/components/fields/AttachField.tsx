@@ -57,7 +57,7 @@ export function AttachField({
           <Button
             variant="ghost"
             size="icon-xs"
-            className="ml-auto shrink-0"
+            className="ms-auto shrink-0"
             onClick={() => onChange("")}
           >
             <XIcon />

@@ -102,9 +102,9 @@ export default function Sidebar() {
                 placeholder={t("Search...")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8"
+                className="ps-8"
               />
-              <SearchIcon className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50" />
+              <SearchIcon className="pointer-events-none absolute top-1/2 start-2 size-4 -translate-y-1/2 opacity-50" />
             </SidebarGroupContent>
           </SidebarGroup>
         </form>
