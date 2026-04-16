@@ -80,6 +80,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async function restore() {
       const rt = getRefreshToken();
       if (!rt) {
+        // Clear any orphaned access token seeded at module load from
+        // localStorage. Without this, every subsequent request attaches
+        // a stale Bearer header, including POST /auth/login.
+        setAccessToken(null);
         setIsLoading(false);
         return;
       }
