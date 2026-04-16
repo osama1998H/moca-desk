@@ -27,7 +27,7 @@ export function TranslationTool() {
 
   const { data: langData } = useDocList("Language", {
     fields: ["name", "language_name", "enabled"],
-    filters: [["enabled", "=", 1]],
+    filters: [["enabled", "=", true]],
     limit: 50,
   });
   const languages = (langData?.data ?? []).map((d) => ({

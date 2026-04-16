@@ -24,7 +24,7 @@ export function LanguageSwitcher() {
 
   const { data: langData } = useDocList("Language", {
     fields: ["name", "language_name", "direction", "enabled"],
-    filters: [["enabled", "=", 1]],
+    filters: [["enabled", "=", true]],
     limit: 50,
   });
 
