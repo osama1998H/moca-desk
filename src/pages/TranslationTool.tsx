@@ -45,7 +45,10 @@ export function TranslationTool() {
   useEffect(() => {
     if (!selectedLang && languages.length > 0) {
       const nonEn = languages.find((l) => l.code !== "en");
-      setSelectedLang(nonEn?.code ?? languages[0].code);
+      const fallback = nonEn?.code ?? languages[0]?.code;
+      if (fallback) {
+        setSelectedLang(fallback);
+      }
     }
   }, [languages, selectedLang]);
 
@@ -103,11 +106,13 @@ export function TranslationTool() {
     setRows((prev) => {
       const next = [...prev];
       const target = filtered[rowIndex];
+      if (!target) return prev;
       const globalIndex = prev.findIndex(
         (r) => r.source_text === target.source_text && r.context === target.context,
       );
-      if (globalIndex >= 0) {
-        next[globalIndex] = { ...next[globalIndex], translated_text: value, dirty: true };
+      const current = next[globalIndex];
+      if (globalIndex >= 0 && current) {
+        next[globalIndex] = { ...current, translated_text: value, dirty: true };
       }
       return next;
     });
