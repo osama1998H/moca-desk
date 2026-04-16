@@ -4,6 +4,7 @@ import { useWebSocket } from "@/providers/WebSocketProvider";
 import { useMetaType } from "@/providers/MetaProvider";
 import { cn } from "@/lib/utils";
 import { LogOutIcon } from "lucide-react";
+import { LanguageSwitcher } from "@/components/shell/LanguageSwitcher";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -89,6 +90,8 @@ export function Topbar() {
 
       <div className="ml-auto flex items-center gap-2">
         <span title={connectionState} className={connectionColor} />
+
+        <LanguageSwitcher />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
