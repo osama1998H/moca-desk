@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import { useDocList } from "@/providers/DocProvider";
 import { useI18n } from "@/providers/I18nProvider";
-import { BlocksIcon, ChevronRightIcon, HomeIcon, SearchIcon, FileTextIcon } from "lucide-react";
+import { BlocksIcon, ChevronRightIcon, HomeIcon, LanguagesIcon, SearchIcon, FileTextIcon } from "lucide-react";
 import { getCustomSidebarItems } from "@/lib/sidebarRegistry";
 import { getIconComponent } from "@/lib/iconMap";
 import {
@@ -127,6 +127,14 @@ export default function Sidebar() {
                 <Link to="/desk/app/doctype-builder">
                   <BlocksIcon data-icon />
                   <span>{t("DocType Builder")}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link to="/desk/app/translation-tool">
+                  <LanguagesIcon data-icon />
+                  <span>{t("Translation Tool")}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

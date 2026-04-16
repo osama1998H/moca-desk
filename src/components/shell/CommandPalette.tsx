@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { useDocList } from "@/providers/DocProvider";
 import { useI18n } from "@/providers/I18nProvider";
-import { BlocksIcon, HomeIcon } from "lucide-react";
+import { BlocksIcon, HomeIcon, LanguagesIcon } from "lucide-react";
 import {
   CommandDialog,
   Command,
@@ -97,6 +97,15 @@ export function CommandPalette() {
             >
               <BlocksIcon data-icon="inline-start" />
               {t("New DocType")}
+            </CommandItem>
+            <CommandItem
+              onSelect={() => {
+                setOpen(false);
+                void navigate("/desk/app/translation-tool");
+              }}
+            >
+              <LanguagesIcon data-icon="inline-start" />
+              {t("Translation Tool")}
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />

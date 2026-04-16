@@ -11,6 +11,7 @@ const FormView = lazy(() => import("@/pages/FormView"));
 const ReportView = lazy(() => import("@/pages/ReportView"));
 const DashboardView = lazy(() => import("@/pages/DashboardView"));
 const DocTypeBuilder = lazy(() => import("@/pages/DocTypeBuilder"));
+const TranslationTool = lazy(() => import("@/pages/TranslationTool"));
 
 function PageSkeleton() {
   return (
@@ -77,6 +78,14 @@ export function createRouter() {
               element: (
                 <Suspense fallback={<PageSkeleton />}>
                   <DocTypeBuilder />
+                </Suspense>
+              ),
+            },
+            {
+              path: "translation-tool",
+              element: (
+                <Suspense fallback={<PageSkeleton />}>
+                  <TranslationTool />
                 </Suspense>
               ),
             },
