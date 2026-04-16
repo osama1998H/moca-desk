@@ -27,6 +27,14 @@ let accessToken: string | null = localStorage.getItem("moca_access_token");
 let refreshToken: string | null = localStorage.getItem("moca_refresh_token");
 let siteName: string = import.meta.env.VITE_MOCA_SITE ?? "";
 
+// ── Language state (set by I18nProvider) ────────────────────────────────────
+
+let languageGetter: () => string = () => "en";
+
+export function setLanguageGetter(fn: () => string): void {
+  languageGetter = fn;
+}
+
 export function setAccessToken(token: string | null): void {
   accessToken = token;
   if (token) {
@@ -108,6 +116,7 @@ async function request<T>(
   if (siteName) {
     headers["X-Moca-Site"] = siteName;
   }
+  headers["Accept-Language"] = languageGetter();
   if (body !== undefined) {
     headers["Content-Type"] = "application/json";
   }
