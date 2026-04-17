@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/utils";
@@ -21,6 +21,10 @@ export function DocTypeEntryDialog({
   onOpenExisting,
 }: DocTypeEntryDialogProps) {
   const [view, setView] = useState<View>("landing");
+
+  useEffect(() => {
+    if (!open) setView("landing");
+  }, [open]);
 
   // Swallow both Escape and overlay-click so the dialog is non-dismissible.
   // The only way out is to pick an action or navigate via the sidebar.

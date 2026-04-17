@@ -80,4 +80,29 @@ describe("DocTypeEntryDialog", () => {
       expect(screen.getByText(/create new doctype/i)).toBeTruthy(),
     );
   });
+
+  it("resets to landing when closed and reopened", async () => {
+    const { rerender } = render(
+      <DocTypeEntryDialog open onStage={() => {}} onOpenExisting={() => {}} />,
+    );
+
+    // Navigate to Create view
+    fireEvent.click(screen.getByText(/create new doctype/i));
+    await waitFor(() => expect(screen.getByLabelText(/^name$/i)).toBeTruthy());
+
+    // Close the dialog
+    rerender(
+      <DocTypeEntryDialog open={false} onStage={() => {}} onOpenExisting={() => {}} />,
+    );
+
+    // Reopen — should land on Landing, not Create
+    rerender(
+      <DocTypeEntryDialog open onStage={() => {}} onOpenExisting={() => {}} />,
+    );
+    await waitFor(() =>
+      expect(screen.getByText(/edit existing doctype/i)).toBeTruthy(),
+    );
+    // Landing shows both cards; Name label from Create should not be visible
+    expect(screen.queryByLabelText(/^name$/i)).toBeNull();
+  });
 });
