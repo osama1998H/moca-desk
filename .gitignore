@@ -16,3 +16,9 @@ src/**/*.d.ts.map
 .moca-extensions.d.ts
 vite.config.js
 vite.config.d.ts
+
+# Skylos analysis — keep baseline.json committed, ignore everything else
+.skylos/*
+!.skylos/baseline.json
+skylos-results.json
+skylos-results.sarif.json

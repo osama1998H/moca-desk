@@ -35,7 +35,9 @@
     "build": "tsc -b && vite build",
     "build:lib": "tsc -p tsconfig.lib.json && tsc-alias -p tsconfig.lib.json && cp src/index.css dist/index.css",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "audit:skylos": "skylos . -a --exclude-folder node_modules --exclude-folder dist --exclude-folder .vite --baseline",
+    "audit:skylos:baseline": "skylos baseline . --exclude-folder node_modules --exclude-folder dist --exclude-folder .vite"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.5",
