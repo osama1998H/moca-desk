@@ -76,10 +76,14 @@ export function CreateDocTypeForm({ onStage, onBack }: CreateDocTypeFormProps) {
       return;
     }
     setAvailability("checking");
+    let cancelled = false;
     debounceRef.current = setTimeout(() => {
       get(`dev/doctype/${name}`)
-        .then(() => setAvailability("taken"))
+        .then(() => {
+          if (!cancelled) setAvailability("taken");
+        })
         .catch((e: unknown) => {
+          if (cancelled) return;
           if (e instanceof MocaApiError && e.status === 404) {
             setAvailability("available");
           } else {
@@ -88,6 +92,7 @@ export function CreateDocTypeForm({ onStage, onBack }: CreateDocTypeFormProps) {
         });
     }, 300);
     return () => {
+      cancelled = true;
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [name]);

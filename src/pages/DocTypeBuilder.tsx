@@ -48,7 +48,12 @@ const ICON_RAIL_ITEMS: IconRailItem[] = [
 function findFieldLocation(
   layout: { tabs: { sections: { columns: { fields: string[] }[] }[] }[] },
   fieldName: string,
-): { tabIdx: number; sectionIdx: number; colIdx: number; fieldIdx: number } | null {
+): {
+  tabIdx: number;
+  sectionIdx: number;
+  colIdx: number;
+  fieldIdx: number;
+} | null {
   for (let t = 0; t < layout.tabs.length; t++) {
     const tab = layout.tabs[t]!;
     for (let s = 0; s < tab.sections.length; s++) {
@@ -88,7 +93,16 @@ export default function DocTypeBuilder() {
       store.hydrate({
         name: meta.name,
         module: meta.module ?? "",
-        layout: meta.layout ?? { tabs: [{ label: "Details", sections: [{ columns: [{ fields: meta.fields.map((f) => f.name) }] }] }] },
+        layout: meta.layout ?? {
+          tabs: [
+            {
+              label: "Details",
+              sections: [
+                { columns: [{ fields: meta.fields.map((f) => f.name) }] },
+              ],
+            },
+          ],
+        },
         fields: meta.fields_map ?? fieldsMap,
         settings: {
           naming_rule: meta.naming_rule,
@@ -164,7 +178,10 @@ export default function DocTypeBuilder() {
     }
 
     // Case 3: Canvas field dropped on another canvas field (reorder within/across columns)
-    if (activeData?.type === "canvas-field" && overData?.type === "canvas-field") {
+    if (
+      activeData?.type === "canvas-field" &&
+      overData?.type === "canvas-field"
+    ) {
       const draggedFieldName = active.id as string;
       const overFieldName = over.id as string;
 
@@ -228,7 +245,7 @@ export default function DocTypeBuilder() {
       const message = err instanceof Error ? err.message : "Save failed";
       toast.error(message);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store, navigate]);
 
   // ── Keyboard shortcuts ────────────────────────────────────────────────
@@ -262,7 +279,7 @@ export default function DocTypeBuilder() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.selection, handleSave]);
 
   // ── beforeunload warning ──────────────────────────────────────────────
@@ -277,7 +294,9 @@ export default function DocTypeBuilder() {
 
   // ── Fetch available apps for dev API selectors ─────────────────────
 
-  const [appList, setAppList] = useState<{ name: string; modules: string[] }[]>([]);
+  const [appList, setAppList] = useState<{ name: string; modules: string[] }[]>(
+    [],
+  );
 
   useEffect(() => {
     get<ApiResponse<{ name: string; modules: string[] }[]>>("dev/apps")
@@ -293,7 +312,11 @@ export default function DocTypeBuilder() {
   function renderDrawer() {
     switch (store.activeDrawer) {
       case "fields":
-        return <DrawerPanel title="Fields"><FieldPalette /></DrawerPanel>;
+        return (
+          <DrawerPanel title="Fields">
+            <FieldPalette />
+          </DrawerPanel>
+        );
       case "settings":
         return <SettingsDrawer />;
       case "permissions":
@@ -376,77 +399,87 @@ export default function DocTypeBuilder() {
         }}
       />
       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <BuilderShell
-        toolbar={
-          <BuilderToolbar
-            name={store.name}
-            onNameChange={store.setName}
-            mode={store.mode}
-            onModeChange={store.setMode}
-            onSave={handleSave}
-            isDirty={store.isDirty}
-          >
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
-                <Label htmlFor="builder-app" className="text-xs text-muted-foreground">
-                  App
-                </Label>
-                <select
-                  id="builder-app"
-                  value={store.app ?? ""}
-                  onChange={(e) => {
-                    const val = e.target.value || null;
-                    store.setApp(val);
-                    store.setModule("");
-                  }}
-                  className="h-7 w-28 rounded-md border bg-background px-2 text-xs"
-                >
-                  <option value="">Select app...</option>
-                  {appList.map((a) => (
-                    <option key={a.name} value={a.name}>
-                      {a.name}
-                    </option>
-                  ))}
-                </select>
+        <BuilderShell
+          toolbar={
+            <BuilderToolbar
+              name={store.name}
+              onNameChange={store.setName}
+              mode={store.mode}
+              onModeChange={store.setMode}
+              onSave={handleSave}
+              isDirty={store.isDirty}
+            >
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <Label
+                    htmlFor="builder-app"
+                    className="text-xs text-muted-foreground"
+                  >
+                    App
+                  </Label>
+                  <select
+                    id="builder-app"
+                    value={store.app ?? ""}
+                    onChange={(e) => {
+                      const val = e.target.value || null;
+                      store.setApp(val);
+                      store.setModule("");
+                    }}
+                    className="h-7 w-28 rounded-md border bg-background px-2 text-xs"
+                  >
+                    <option value="">Select app...</option>
+                    {appList.map((a) => (
+                      <option key={a.name} value={a.name}>
+                        {a.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Label
+                    htmlFor="builder-module"
+                    className="text-xs text-muted-foreground"
+                  >
+                    Module
+                  </Label>
+                  <select
+                    id="builder-module"
+                    value={store.module}
+                    onChange={(e) => store.setModule(e.target.value)}
+                    className="h-7 w-28 rounded-md border bg-background px-2 text-xs"
+                    disabled={!store.app}
+                  >
+                    <option value="">Select module...</option>
+                    {selectedAppModules.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <Label htmlFor="builder-module" className="text-xs text-muted-foreground">
-                  Module
-                </Label>
-                <select
-                  id="builder-module"
-                  value={store.module}
-                  onChange={(e) => store.setModule(e.target.value)}
-                  className="h-7 w-28 rounded-md border bg-background px-2 text-xs"
-                  disabled={!store.app}
-                >
-                  <option value="">Select module...</option>
-                  {selectedAppModules.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </BuilderToolbar>
-        }
-        iconRailItems={ICON_RAIL_ITEMS}
-        activeDrawer={store.activeDrawer}
-        onDrawerToggle={(id) => store.toggleDrawer(id as "fields" | "settings" | "permissions")}
-        leftDrawer={renderDrawer()}
-        rightPanel={renderRightPanel()}
-        statusBar={
-          <>
-            <span>{fieldCount} field{fieldCount !== 1 ? "s" : ""}</span>
-            {store.isDirty && (
-              <span className="ms-2 text-amber-500">Modified</span>
-            )}
-          </>
-        }
-      >
-        {store.mode === "schematic" ? <SchematicCanvas /> : <PreviewMode />}
-      </BuilderShell>
+            </BuilderToolbar>
+          }
+          iconRailItems={ICON_RAIL_ITEMS}
+          activeDrawer={store.activeDrawer}
+          onDrawerToggle={(id) =>
+            store.toggleDrawer(id as "fields" | "settings" | "permissions")
+          }
+          leftDrawer={renderDrawer()}
+          rightPanel={renderRightPanel()}
+          statusBar={
+            <>
+              <span>
+                {fieldCount} field{fieldCount !== 1 ? "s" : ""}
+              </span>
+              {store.isDirty && (
+                <span className="ms-2 text-amber-500">Modified</span>
+              )}
+            </>
+          }
+        >
+          {store.mode === "schematic" ? <SchematicCanvas /> : <PreviewMode />}
+        </BuilderShell>
       </DndContext>
     </>
   );
