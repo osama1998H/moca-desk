@@ -1,4 +1,5 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DocTypeList } from "./DocTypeList";
@@ -115,5 +116,17 @@ describe("DocTypeList", () => {
 
     fireEvent.click(screen.getByLabelText(/back/i));
     expect(onBack).toHaveBeenCalled();
+  });
+
+  it("invokes onOpen when Enter is pressed on a focused row", async () => {
+    const user = userEvent.setup();
+    const onOpen = vi.fn();
+    render(<DocTypeList onOpen={onOpen} onBack={() => {}} />);
+    await waitFor(() => expect(screen.getByText("Customer")).toBeTruthy());
+
+    const row = screen.getByRole("button", { name: /customer/i });
+    row.focus();
+    await user.keyboard("{Enter}");
+    expect(onOpen).toHaveBeenCalledWith("Customer");
   });
 });

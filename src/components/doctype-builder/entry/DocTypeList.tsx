@@ -97,37 +97,39 @@ export function DocTypeList({ onOpen, onBack }: DocTypeListProps) {
       {filtered.length > 0 && (
         <ul className="max-h-80 divide-y overflow-y-auto rounded-md border">
           {filtered.map((it) => (
-            <li
-              key={`${it.app}.${it.module}.${it.name}`}
-              onClick={() => onOpen(it.name)}
-              className="flex cursor-pointer items-center justify-between px-3 py-2 hover:bg-accent"
-            >
-              <div className="flex items-center gap-2">
-                <span className="font-medium">{it.name}</span>
-                {it.is_submittable && (
-                  <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                    Submittable
-                  </span>
-                )}
-                {it.is_single && (
-                  <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                    Single
-                  </span>
-                )}
-                {it.is_child_table && (
-                  <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                    Child Table
-                  </span>
-                )}
-                {it.is_virtual && (
-                  <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                    Virtual
-                  </span>
-                )}
-              </div>
-              <span className="text-xs text-muted-foreground">
-                {it.module} · {it.app}
-              </span>
+            <li key={`${it.app}.${it.module}.${it.name}`}>
+              <button
+                type="button"
+                onClick={() => onOpen(it.name)}
+                className="flex w-full cursor-pointer items-center justify-between px-3 py-2 hover:bg-accent"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{it.name}</span>
+                  {it.is_submittable && (
+                    <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                      Submittable
+                    </span>
+                  )}
+                  {it.is_single && (
+                    <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                      Single
+                    </span>
+                  )}
+                  {it.is_child_table && (
+                    <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                      Child Table
+                    </span>
+                  )}
+                  {it.is_virtual && (
+                    <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                      Virtual
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs text-muted-foreground">
+                  {it.module} · {it.app}
+                </span>
+              </button>
             </li>
           ))}
         </ul>
