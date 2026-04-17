@@ -352,3 +352,17 @@ export interface WorkflowTransitionResponse {
   status: string;
   state: WorkflowStatus;
 }
+
+/**
+ * One entry returned by GET /api/v1/dev/doctype, used by the DocType
+ * Builder entry dialog to list existing doctypes.
+ */
+export interface DocTypeListItem {
+  name: string;
+  app: string;
+  module: string;
+  is_submittable: boolean;
+  is_single: boolean;
+  is_child_table: boolean;
+  is_virtual: boolean;
+}
