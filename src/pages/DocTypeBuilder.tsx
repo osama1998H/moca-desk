@@ -21,6 +21,7 @@ import { SettingsDrawer } from "@/components/doctype-builder/SettingsDrawer";
 import { PermissionsDrawer } from "@/components/doctype-builder/PermissionsDrawer";
 import { getFieldPropertySchema } from "@/components/doctype-builder/property-schemas";
 import { labelToFieldName } from "@/components/doctype-builder/types";
+import { DocTypeEntryDialog } from "@/components/doctype-builder/entry/DocTypeEntryDialog";
 
 import { Label } from "@/components/ui/label";
 
@@ -71,6 +72,8 @@ export default function DocTypeBuilder() {
   const navigate = useNavigate();
   const store = useDocTypeBuilderStore();
 
+  const [showEntryDialog, setShowEntryDialog] = useState<boolean>(!urlName);
+
   // Fetch existing doctype metadata if editing
   const { data: meta, isLoading, error } = useMetaType(urlName ?? "");
 
@@ -105,10 +108,16 @@ export default function DocTypeBuilder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meta]);
 
-  // Reset store when navigating to a new doctype builder (no URL param)
+  // Drive the dialog from the URL: deep-link with :name closes the dialog,
+  // navigation back to /doctype-builder (no name) reopens it and resets the
+  // store. Calls to setShowEntryDialog(false) inside onStage do NOT trigger
+  // this effect because urlName did not change.
   useEffect(() => {
-    if (!urlName) {
+    if (urlName) {
+      setShowEntryDialog(false);
+    } else {
       store.reset();
+      setShowEntryDialog(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlName]);
@@ -354,7 +363,19 @@ export default function DocTypeBuilder() {
   // ── Render ────────────────────────────────────────────────────────────
 
   return (
-    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <>
+      <DocTypeEntryDialog
+        open={showEntryDialog}
+        onStage={(payload) => {
+          store.stageNew(payload);
+          setShowEntryDialog(false);
+        }}
+        onOpenExisting={(name) => {
+          navigate(`/desk/app/doctype-builder/${name}`);
+          // The URL change triggers the effect above, which closes the dialog.
+        }}
+      />
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <BuilderShell
         toolbar={
           <BuilderToolbar
@@ -426,6 +447,7 @@ export default function DocTypeBuilder() {
       >
         {store.mode === "schematic" ? <SchematicCanvas /> : <PreviewMode />}
       </BuilderShell>
-    </DndContext>
+      </DndContext>
+    </>
   );
 }
