@@ -98,7 +98,16 @@ interface DocTypeBuilderState {
   // ── Persistence ─────────────────────────────────────────────────────────
   markClean: () => void;
   hydrate: (data: HydratePayload) => void;
+  stageNew: (payload: StageNewPayload) => void;
   reset: () => void;
+}
+
+/** Payload accepted by stageNew() to start a new (not-yet-persisted) doctype. */
+export interface StageNewPayload {
+  name: string;
+  app: string | null;
+  module: string;
+  settings: DocTypeSettings;
 }
 
 /** Payload accepted by hydrate() to load an existing doctype into the builder. */
@@ -380,6 +389,19 @@ export const useDocTypeBuilderStore = create<DocTypeBuilderState>(
         mode: "schematic",
         isDirty: false,
       }),
+
+    stageNew: (payload) => {
+      const fresh = initialState();
+      set({
+        ...fresh,
+        name: payload.name,
+        app: payload.app,
+        module: payload.module,
+        settings: payload.settings,
+        isNew: true,
+        isDirty: false,
+      });
+    },
 
     reset: () => set(initialState()),
   }),
